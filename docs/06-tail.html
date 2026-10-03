@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A tail that swings · Tank lessons</title>
+<meta name="description" content="A turret with a narrow arc, facing backward, mostly rests; when the tank turns it lags and settles back, and anything riding it swings.">
+<meta property="og:title" content="A tail that swings">
+<meta property="og:description" content="A turret with a narrow arc, facing backward, mostly rests; when the tank turns it lags and settles back, and anything riding it swings.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://rednebulasunshine.github.io/diep-tank-lessons/06-tail.html">
+<meta property="og:image" content="https://rednebulasunshine.github.io/diep-tank-lessons/img/lesson-06-tail-swisher.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-head"><a class="brand" href="index.html">☀️ Tank lessons</a><span class="crumbs">how our diep.io tanks do what they do</span></header>
+<main>
+<article class="card"><div class="kv">Lesson 06</div><h1>A tail that swings</h1><p class="summary">A turret with a narrow arc, facing backward, mostly rests; when the tank turns it lags and settles back, and anything riding it swings.</p><h2>What you see</h2>
+<p>A tail that trails the turn and swishes back to centre. Capes, manes, broom twigs and dangling lanterns are all the same thing.</p>
+<h2>The trick</h2>
+<p>An auto turret only moves for a target inside its wedge. Give it <b>Facing 180</b> (straight back) and a narrow <b>Arc</b> of about 20, and almost nothing ever enters that wedge, so the turret sits at rest. When the tank turns, the turret lags the body for a moment and settles back: the closest thing this editor has to something that flows. Mount the tail on it and hide the turret's grey disc under a part the same colour as the body.</p>
+<div class="scene" data-scene><script type="application/json">{"steps": [{"show": ["cannon"], "focus": "Tank body", "say": "A plain tank."}, {"show": ["cannon", "tail pivot"], "focus": "tail pivot", "say": "An auto turret at **Offset X −36**, **Facing 180**, **Arc 20**, dragged **under** the body. It only turns for a target inside that narrow wedge behind the tank, so mostly it rests."}, {"show": ["cannon", "tail pivot", "tail"], "focus": "tail", "say": "The tail is a barrel that **rides on** the pivot: **Length 130**, tapering from **0.62×** to **0.14×**, **Fires: Nothing**, **Same color as the body**."}, {"show": ["cannon", "tail pivot", "tail", "tail tuft"], "focus": "tail tuft", "say": "A Charcoal circle riding the same pivot, **Offset X 136**, as the tuft."}, {"show": ["cannon", "tail pivot", "tail", "tail tuft", "tail pivot cover"], "focus": "tail pivot cover", "say": "An octagon of **Size 29** at the pivot, **Same color as the body**, hides the turret's grey disc where it pokes out from under the hull."}, {"live": true, "say": "**Play** and swing the mouse round: the tail lags the turn and swishes back."}], "tank": {"id": 100001, "name": "Swisher", "minLevel": 1, "body": {"sides": 0, "size": 50}, "projectiles": [{"name": "Bullet", "base": "bullet", "sides": -1}], "invisibility": {"gain": 0.03076923076923077, "lossOnHit": 0.05}, "statsMaxLevel": [7, 7, 7, 7, 7, 7, 7, 7], "upgradesFrom": [0], "barrels": [{"bulletType": "bullet", "projectile": 0, "order": 0, "editor": {"name": "cannon"}}, {"bulletType": "none", "projectile": -1, "distance": 130, "heightMultiplier": 0.619, "muzzleScale": 0.2308, "color": 27, "mountTurret": 0, "order": 2, "editor": {"name": "tail"}}], "bodyShapes": [{"sides": 0, "size": 10, "xOffset": 136, "color": 20, "mountTurret": 0, "order": 3, "editor": {"name": "tail tuft"}}, {"sides": 8, "size": 29, "xOffset": -36, "color": 27, "order": 4, "editor": {"name": "tail pivot cover"}}], "turrets": [{"xOffset": -36, "angle": 3.1416, "arc": 0.3491, "controllable": false, "aboveBody": false, "order": 1, "editor": {"name": "tail pivot"}}]}, "packFile": "lesson-06-tail.diep-pack", "packName": "Lesson 06 Tail", "author": "☀️"}</script><noscript>The interactive demo needs JavaScript.</noscript></div>
+<h2>Numbers that matter</h2>
+<table><thead><tr><th>Field</th><th>Value</th><th>Notes</th></tr></thead><tbody><tr><td>Facing</td><td>180</td><td>Away from where enemies usually are</td></tr><tr><td>Arc</td><td>15 to 25</td><td>Narrow enough that targets rarely pull it; 0 would let it spin freely</td></tr><tr><td>Cover</td><td>octagon Size 29</td><td>Its inner radius (26.8) just covers a default disc of 25</td></tr><tr><td>Base size</td><td>25 default, or 1</td><td>Base size 1 hides the disc without a cover</td></tr></tbody></table>
+<h2>Gotchas</h2>
+<ul><li>A target inside the wedge still pulls the tail toward it, and a weapon on the pivot would fire at it. For a pure decoration that is fine.</li><li>The tail counts as one of the tank's eight auto turrets.</li><li>A chain of pivots does not work: a turret cannot ride a turret, so a tail bends at one joint only. For a tail that really bends, see lesson 10.</li></ul>
+<h2>Where we used it</h2>
+<div class="seen"><figure><img src="img/halloween-broomhilda.png" alt="Broomhilda: broom twigs that swing behind" loading="lazy"><figcaption>Broomhilda: broom twigs that swing behind</figcaption></figure><figure><img src="img/halloween-vlad.png" alt="Vlad: a cape hem on a rear pivot" loading="lazy"><figcaption>Vlad: a cape hem on a rear pivot</figcaption></figure><figure><img src="img/halloween-babayaga.png" alt="Babayaga: a lantern that dangles" loading="lazy"><figcaption>Babayaga: a lantern that dangles</figcaption></figure></div></article><div class="nav-row"><a href="05-eyes.html">‹ Eyes that watch</a><a href="index.html">All lessons</a><a href="07-hand.html">A hand that follows the cursor ›</a></div>
+</main>
+<footer>Packs and lessons by Sunshine ☀️ · built with the <a href="https://github.com/RedNebulaSunshine/diep-pack-skill">diep-pack skill</a> · <a href="https://github.com/RedNebulaSunshine/diep-tank-lessons">source, issues and corrections</a> · MIT. Diep.io and its editor belong to the game's publisher; this site is not affiliated with them.</footer>
+<script src="assets/tank.js"></script>
+<script src="assets/editor.js"></script>
+</body>
+</html>

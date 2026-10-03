@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eyes that watch · Tank lessons</title>
+<meta name="description" content="An auto turret turns toward the nearest enemy. Make its disc the eyeball and let the pupil ride on it.">
+<meta property="og:title" content="Eyes that watch">
+<meta property="og:description" content="An auto turret turns toward the nearest enemy. Make its disc the eyeball and let the pupil ride on it.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://rednebulasunshine.github.io/diep-tank-lessons/05-eyes.html">
+<meta property="og:image" content="https://rednebulasunshine.github.io/diep-tank-lessons/img/lesson-05-eyes-watcher.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-head"><a class="brand" href="index.html">☀️ Tank lessons</a><span class="crumbs">how our diep.io tanks do what they do</span></header>
+<main>
+<article class="card"><div class="kv">Lesson 05</div><h1>Eyes that watch</h1><p class="summary">An auto turret turns toward the nearest enemy. Make its disc the eyeball and let the pupil ride on it.</p><h2>What you see</h2>
+<p>Two eyes that look at whatever comes near, pupils and all, with no gun on them.</p>
+<h2>The trick</h2>
+<p>An <b>auto turret</b> always turns toward the nearest target inside its <b>Range</b> and <b>Arc</b>, whether or not it carries a weapon. So a turret with nothing on it but a part is a part that watches. Set the disc's <b>Base size</b> and <b>Base color</b> to make it the white of the eye, and put the pupil <b>on</b> the turret, a little ahead of its centre, so it points where the turret looks.</p>
+<div class="scene" data-scene><script type="application/json">{"live": {"enemy": true}, "steps": [{"show": ["cannon"], "focus": "Tank body", "say": "A plain tank. Auto turrets draw **over** the body unless you drag them under it."}, {"show": ["cannon", "eye left"], "focus": "eye left", "say": "Add an auto turret at **Offset X 14, Offset Y −22**: **Base size 16**, **Base color White**, **Arc 90** so it glances up to 90° either side of straight ahead, **Range** left at its default 1700."}, {"show": ["cannon", "eye left", "eye left pupil"], "focus": "eye left pupil", "say": "The pupil is a part that **rides on** the turret: **Sides 0**, **Size 7**, **Offset X 6** from the turret's centre, drawn over the disc. Where the turret looks, so does the pupil."}, {"show": ["cannon", "eye left", "eye left pupil", "eye right", "eye right pupil"], "focus": "eye right", "say": "The second eye is a copy at **Offset Y +22**."}, {"live": true, "say": "**Play.** A square drifts past: both eyes follow it, and sit straight when nothing is near."}], "tank": {"id": 100001, "name": "Watcher", "minLevel": 1, "body": {"sides": 0, "size": 50}, "projectiles": [{"name": "Bullet", "base": "bullet", "sides": -1}], "invisibility": {"gain": 0.03076923076923077, "lossOnHit": 0.05}, "statsMaxLevel": [7, 7, 7, 7, 7, 7, 7, 7], "upgradesFrom": [0], "barrels": [{"bulletType": "bullet", "projectile": 0, "distance": 80, "order": 0, "editor": {"name": "cannon"}}], "bodyShapes": [{"sides": 0, "size": 7, "xOffset": 6, "aboveBody": true, "color": 0, "mountTurret": 0, "order": 2, "editor": {"name": "eye left pupil"}}, {"sides": 0, "size": 7, "xOffset": 6, "aboveBody": true, "color": 0, "mountTurret": 1, "order": 4, "editor": {"name": "eye right pupil"}}], "turrets": [{"xOffset": 14, "yOffset": -22, "baseSize": 16, "arc": 1.5708, "color": 19, "order": 1, "editor": {"name": "eye left"}}, {"xOffset": 14, "yOffset": 22, "baseSize": 16, "arc": 1.5708, "color": 19, "order": 3, "editor": {"name": "eye right"}}]}, "packFile": "lesson-05-eyes.diep-pack", "packName": "Lesson 05 Eyes", "author": "☀️"}</script><noscript>The interactive demo needs JavaScript.</noscript></div>
+<h2>Numbers that matter</h2>
+<table><thead><tr><th>Field</th><th>Value</th><th>Notes</th></tr></thead><tbody><tr><td>Base size</td><td>16 (30 for a big eyeball, 1 to hide a disc)</td><td>The disc's radius</td></tr><tr><td>Base color</td><td>White</td><td>The eye's white; the pupil is Border grey</td></tr><tr><td>Arc</td><td>90</td><td>0 lets it turn all the way round; a tiny arc (5) pins it</td></tr><tr><td>Range</td><td>1700 default</td><td>0 switches tracking off (lesson 07 uses that)</td></tr><tr><td>Pupil Offset X</td><td>6</td><td>Ahead of the pivot, so it reads as a glance</td></tr></tbody></table>
+<h2>Gotchas</h2>
+<ul><li>A turret with nothing to shoot rests at its <b>Facing</b>: 0 looks ahead.</li><li>Turrets cannot ride turrets: an eye on a swinging tail will not swing with it (it is placed where you put it and ignores the mount).</li><li>Eight auto turrets per tank, and that is a hard limit. Two eyes spend two.</li><li>Parts riding a turret can also sit under its disc (eyelids, a socket) when they are not marked over the body.</li></ul>
+<h2>Where we used it</h2>
+<div class="seen"><figure><img src="img/halloween-babayaga.png" alt="Babayaga: eyes that track" loading="lazy"><figcaption>Babayaga: eyes that track</figcaption></figure><figure><img src="img/halloween-dracula.png" alt="Dracula: eyes under the widow&#x27;s peak" loading="lazy"><figcaption>Dracula: eyes under the widow's peak</figcaption></figure></div></article><div class="nav-row"><a href="04-pistons.html">‹ Parts that pump</a><a href="index.html">All lessons</a><a href="06-tail.html">A tail that swings ›</a></div>
+</main>
+<footer>Packs and lessons by Sunshine ☀️ · built with the <a href="https://github.com/RedNebulaSunshine/diep-pack-skill">diep-pack skill</a> · <a href="https://github.com/RedNebulaSunshine/diep-tank-lessons">source, issues and corrections</a> · MIT. Diep.io and its editor belong to the game's publisher; this site is not affiliated with them.</footer>
+<script src="assets/tank.js"></script>
+<script src="assets/editor.js"></script>
+</body>
+</html>

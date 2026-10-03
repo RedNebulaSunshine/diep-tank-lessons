@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A hand that follows the cursor · Tank lessons</title>
+<meta name="description" content="An auto turret with Range 0 that aims with the cursor rests at its Facing, swings to the cursor while you hold fire, and drops back when you let go.">
+<meta property="og:title" content="A hand that follows the cursor">
+<meta property="og:description" content="An auto turret with Range 0 that aims with the cursor rests at its Facing, swings to the cursor while you hold fire, and drops back when you let go.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://rednebulasunshine.github.io/diep-tank-lessons/07-hand.html">
+<meta property="og:image" content="https://rednebulasunshine.github.io/diep-tank-lessons/img/lesson-07-hand-waver.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-head"><a class="brand" href="index.html">☀️ Tank lessons</a><span class="crumbs">how our diep.io tanks do what they do</span></header>
+<main>
+<article class="card"><div class="kv">Lesson 07</div><h1>A hand that follows the cursor</h1><p class="summary">An auto turret with Range 0 that aims with the cursor rests at its Facing, swings to the cursor while you hold fire, and drops back when you let go.</p><h2>What you see</h2>
+<p>An arm holding a wand. At rest it hangs to the side; hold fire and it reaches toward the cursor; let go and it drops back. Every held thing in our packs works this way: wands, scythes, wrenches, candy bags, thrown bats.</p>
+<h2>The trick</h2>
+<p>Two settings on one auto turret. <b>Range 0</b> so it never looks for enemies, and <b>Aims with the cursor (Auto Smasher)</b> on so the player steers it. With both, the turret rests at its <b>Facing</b> until the fire button is held, then turns to the cursor inside its <b>Arc</b>, and returns to rest on release. What it carries makes no difference: a bare rod, a drawn hand, even a gun.</p>
+<div class="scene" data-scene><script type="application/json">{"steps": [{"show": ["cannon"], "focus": "Tank body", "say": "A plain tank."}, {"show": ["cannon", "arm pivot"], "focus": "arm pivot", "say": "An auto turret at **Offset X −10, Offset Y 44**: **Range 0**, **Aims with the cursor** on, **Facing 35**, **Arc 70**. **Base size 8** and **Same color as the body** make the disc a shoulder joint."}, {"show": ["cannon", "arm pivot", "arm"], "focus": "arm", "say": "The arm is a barrel riding the pivot: **Length 60**, **Width at base 0.38×**, **Fires: Nothing**, **Same color as the body**."}, {"show": ["cannon", "arm pivot", "arm", "hand", "wand", "wand star"], "focus": "wand", "say": "A Yellow circle for the hand, a Brown barrel for the wand and a star at its tip all ride the same pivot and turn with it."}, {"live": true, "say": "**Play.** Hold fire and move the cursor: the hand follows. Let go: it drops back to rest."}], "tank": {"id": 100001, "name": "Waver", "minLevel": 1, "body": {"sides": 0, "size": 50}, "projectiles": [{"name": "Bullet", "base": "bullet", "sides": -1}], "invisibility": {"gain": 0.03076923076923077, "lossOnHit": 0.05}, "statsMaxLevel": [7, 7, 7, 7, 7, 7, 7, 7], "upgradesFrom": [0], "barrels": [{"bulletType": "bullet", "projectile": 0, "order": 0, "editor": {"name": "cannon"}}, {"bulletType": "none", "projectile": -1, "distance": 60, "heightMultiplier": 0.381, "color": 27, "mountTurret": 0, "order": 2, "editor": {"name": "arm"}}, {"bulletType": "none", "projectile": -1, "flags": {"aboveBody": true}, "distance": 82, "startDistance": 64, "heightMultiplier": 0.1905, "color": 23, "mountTurret": 0, "order": 4, "editor": {"name": "wand"}}], "bodyShapes": [{"sides": 0, "size": 11, "xOffset": 64, "aboveBody": true, "color": 8, "mountTurret": 0, "order": 3, "editor": {"name": "hand"}}, {"sides": 5, "size": 14, "xOffset": 152, "aboveBody": true, "star": true, "color": 8, "mountTurret": 0, "order": 5, "editor": {"name": "wand star"}}], "turrets": [{"xOffset": -10, "yOffset": 44, "baseSize": 8, "angle": 0.6109, "arc": 1.2217, "range": 0, "controllable": true, "aboveBody": false, "color": 27, "order": 1, "editor": {"name": "arm pivot"}}]}, "packFile": "lesson-07-hand.diep-pack", "packName": "Lesson 07 Hand", "author": "☀️"}</script><noscript>The interactive demo needs JavaScript.</noscript></div>
+<h2>Numbers that matter</h2>
+<table><thead><tr><th>Field</th><th>Value</th><th>Notes</th></tr></thead><tbody><tr><td>Range</td><td>0</td><td>Any other value makes it track enemies as well (lesson 09)</td></tr><tr><td>Aims with the cursor</td><td>on</td><td>Off, it is a fixed prop</td></tr><tr><td>Facing</td><td>35</td><td>The rest pose. 0 reads as "always points at the cursor", since the body does too</td></tr><tr><td>Arc</td><td>70</td><td>Always set one: a pivot with Arc 0 wanders when released</td></tr><tr><td>Base size</td><td>8</td><td>Small enough to read as a joint</td></tr></tbody></table>
+<h2>Gotchas</h2>
+<ul><li>It follows the cursor only while the cursor is <b>inside its wedge</b> (Facing ± Arc). An arm resting backward never reaches a forward cursor.</li><li>A gun that <b>Fires on right click</b> mounted on such a pivot never fires at all. Put that gun on the body instead, invisible, where the held item rests, and keep the drawing on the pivot.</li><li>A gun that fires on the left button works fine on the pivot and aims with it: a wand that shoots stars.</li></ul>
+<h2>Where we used it</h2>
+<div class="seen"><figure><img src="img/halloween-babayaga.png" alt="Babayaga: the wand arm" loading="lazy"><figcaption>Babayaga: the wand arm</figcaption></figure><figure><img src="img/halloween-reaper.png" alt="Reaper: the scythe hand" loading="lazy"><figcaption>Reaper: the scythe hand</figcaption></figure><figure><img src="img/halloween-stitches.png" alt="Stitches: a wrench arm" loading="lazy"><figcaption>Stitches: a wrench arm</figcaption></figure></div></article><div class="nav-row"><a href="06-tail.html">‹ A tail that swings</a><a href="index.html">All lessons</a><a href="08-jaws.html">Jaws that bite ›</a></div>
+</main>
+<footer>Packs and lessons by Sunshine ☀️ · built with the <a href="https://github.com/RedNebulaSunshine/diep-pack-skill">diep-pack skill</a> · <a href="https://github.com/RedNebulaSunshine/diep-tank-lessons">source, issues and corrections</a> · MIT. Diep.io and its editor belong to the game's publisher; this site is not affiliated with them.</footer>
+<script src="assets/tank.js"></script>
+<script src="assets/editor.js"></script>
+</body>
+</html>

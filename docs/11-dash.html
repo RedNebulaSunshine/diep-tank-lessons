@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A dash on right click · Tank lessons</title>
+<meta name="description" content="An invisible barrel pointing backward fires a harmless shot with huge Recoil, and the kick throws the tank forward.">
+<meta property="og:title" content="A dash on right click">
+<meta property="og:description" content="An invisible barrel pointing backward fires a harmless shot with huge Recoil, and the kick throws the tank forward.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://rednebulasunshine.github.io/diep-tank-lessons/11-dash.html">
+<meta property="og:image" content="https://rednebulasunshine.github.io/diep-tank-lessons/img/lesson-11-dash-pouncer.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-head"><a class="brand" href="index.html">☀️ Tank lessons</a><span class="crumbs">how our diep.io tanks do what they do</span></header>
+<main>
+<article class="card"><div class="kv">Lesson 11</div><h1>A dash on right click</h1><p class="summary">An invisible barrel pointing backward fires a harmless shot with huge Recoil, and the kick throws the tank forward.</p><h2>What you see</h2>
+<p>Right-click and the tank lunges forward. Vampires, pouncing cats, charging bulls, fleeing thieves: all the same barrel.</p>
+<h2>The trick</h2>
+<p>Recoil pushes the tank away from the shot. So a barrel that points <b>backward</b> pushes the tank <b>forward</b>. Make it <b>invisible</b>, <b>Fires on right click</b>, with <b>Recoil</b> as high as the stock tanks go and a shot that does nothing and vanishes at once. A slow <b>Reload</b> turns it into an ability with a cooldown.</p>
+<div class="scene" data-scene><script type="application/json">{"steps": [{"show": ["cannon"], "focus": "cannon", "say": "A plain tank with a cannon on the left button."}, {"show": ["cannon", "pounce"], "focus": "pounce", "say": "The dash: an **invisible** barrel at **Angle 180** with **Gap −43** so its muzzle sits under the body. **Fires on right click**. **Recoil 16**: the kick throws the tank forward. **Damage 0**, **Penetration 0**, **Bullet speed 0**, **Launch speed 3**, **Lifetime 0.1**, **Reload 4.2**."}, {"subject": "Dash", "show": "all", "focus": "Projectile", "say": "Its projectile is a trap drawn as a tiny star with a slow **Spin**, gone in a tenth of a second."}, {"live": true, "say": "**Play.** Right-click (or long-press on a phone): the tank pounces. The **Tip** field says what right click does, and the game shows it to players for ten seconds."}], "tank": {"id": 100001, "name": "Pouncer", "minLevel": 1, "body": {"sides": 0, "size": 50}, "projectiles": [{"name": "Bullet", "base": "bullet", "sides": -1}, {"name": "Dash", "base": "trap", "sides": 0, "star": true, "spin": 0.01}], "invisibility": {"gain": 0.03076923076923077, "lossOnHit": 0.05}, "statsMaxLevel": [7, 7, 7, 7, 7, 7, 7, 7], "upgradesFrom": [0], "helpText": "Right click to dash", "barrels": [{"bulletType": "bullet", "projectile": 0, "order": 0, "editor": {"name": "cannon"}}, {"bulletType": "trap", "projectile": 1, "flags": {"firesOnSecondary": true}, "invisible": true, "angle": 3.1416, "distance": 5, "startDistance": -43, "damageMultiplier": 0, "penetrationMultiplier": 0, "speedMultiplier": 0, "bulletSizeMultiplier": 1.6, "reloadMultiplier": 4.2, "spreadMultiplier": 0, "lifetime": 0.1, "recoilMultiplier": 16, "knockbackMultiplier": 0, "initialVelocityMultiplier": 3, "order": 1, "editor": {"name": "pounce"}}]}, "packFile": "lesson-11-dash.diep-pack", "packName": "Lesson 11 Dash", "author": "☀️"}</script><noscript>The interactive demo needs JavaScript.</noscript></div>
+<h2>Numbers that matter</h2>
+<table><thead><tr><th>Field</th><th>Value</th><th>Notes</th></tr></thead><tbody><tr><td>Recoil</td><td>16 (12 to 20 seen)</td><td>Stock recoil tops out at 17; the editor allows up to 20</td></tr><tr><td>Reload</td><td>4.2</td><td>One dash every few seconds. Three dashes stacked at Reload 12 make a leap</td></tr><tr><td>Lifetime</td><td>0.1 s</td><td>The shot must not hang around</td></tr><tr><td>Launch speed</td><td>3</td><td>Gets the shot clear of the body instantly</td></tr><tr><td>Tip</td><td>"Right click to dash"</td><td>Players only learn an ability if you tell them</td></tr></tbody></table>
+<h2>Gotchas</h2>
+<ul><li>The shot still costs budget each time, but at Reload 4.2 that is almost nothing.</li><li>Recoil also applies on the left button: a big front-facing cannon with high Recoil walks the tank backward, which is how the stock Booster and Rocketeer work.</li><li>Put nothing between the muzzle and the body: the shot spawns at the muzzle and a part there would catch it.</li></ul>
+<h2>Where we used it</h2>
+<div class="seen"><figure><img src="img/halloween-nandor.png" alt="Nandor: a lunge on the right button" loading="lazy"><figcaption>Nandor: a lunge on the right button</figcaption></figure><figure><img src="img/halloween-stitches.png" alt="Stitches: a RAGE charge" loading="lazy"><figcaption>Stitches: a RAGE charge</figcaption></figure></div></article><div class="nav-row"><a href="10-trail.html">‹ A body that trails behind</a><a href="index.html">All lessons</a><a href="12-hitbox.html">Hiding the body, keeping a hitbox ›</a></div>
+</main>
+<footer>Packs and lessons by Sunshine ☀️ · built with the <a href="https://github.com/RedNebulaSunshine/diep-pack-skill">diep-pack skill</a> · <a href="https://github.com/RedNebulaSunshine/diep-tank-lessons">source, issues and corrections</a> · MIT. Diep.io and its editor belong to the game's publisher; this site is not affiliated with them.</footer>
+<script src="assets/tank.js"></script>
+<script src="assets/editor.js"></script>
+</body>
+</html>

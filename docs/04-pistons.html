@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parts that pump · Tank lessons</title>
+<meta name="description" content="A wing or a leg that moves is a barrel firing a harmless speck, because every barrel that fires slides back on the shot.">
+<meta property="og:title" content="Parts that pump">
+<meta property="og:description" content="A wing or a leg that moves is a barrel firing a harmless speck, because every barrel that fires slides back on the shot.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://rednebulasunshine.github.io/diep-tank-lessons/04-pistons.html">
+<meta property="og:image" content="https://rednebulasunshine.github.io/diep-tank-lessons/img/lesson-04-pistons-flapper.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-head"><a class="brand" href="index.html">☀️ Tank lessons</a><span class="crumbs">how our diep.io tanks do what they do</span></header>
+<main>
+<article class="card"><div class="kv">Lesson 04</div><h1>Parts that pump</h1><p class="summary">A wing or a leg that moves is a barrel firing a harmless speck, because every barrel that fires slides back on the shot.</p><h2>What you see</h2>
+<p>Two wings that beat while you hold fire, one up while the other is down. There is no animation system in the editor. There is only recoil: every barrel that fires slides back along its own axis on each shot, and that slide is the whole animation.</p>
+<h2>The trick</h2>
+<p>Draw the wing as a barrel, then make it fire something nobody will notice: a White speck with almost no damage, size or lifetime. Hold fire and the wing pumps at the barrel's reload rate. Put <b>Fire delay 0.5</b> on its partner and the pair alternates.</p>
+<p>Two conditions, learned the hard way:</p>
+<ul><li>The barrel must be at least about <b>0.5× wide</b> (22 units). A 0.3× barrel pumps so little you cannot see it, however long it is.</li><li>Its <b>muzzle end must be uncovered</b>. The slide is along the barrel, so a part painted over the tip hides the movement, as the body hides the root. Animate the last segment of a limb, not one buried under a knee.</li></ul>
+<div class="scene" data-scene><script type="application/json">{"steps": [{"show": ["cannon"], "focus": "cannon", "say": "Any barrel that fires slides back on each shot. We are going to borrow that."}, {"show": ["cannon", "wing right"], "focus": "wing right", "say": "Draw the wing as a barrel: **Angle 74**, **Gap 20**, **Length 137**, **Width at base 0.71×** tapering to **0.33×**, colour White."}, {"show": ["cannon", "wing right"], "focus": "wing right", "say": "Make it fire a harmless speck: **Fires** a White bullet with **Damage 0.01**, **Penetration 0.2**, **Bullet size 0.15**, **Bullet speed 0.1**, **Lifetime 0.1**, **Recoil 0**, **Knockback 0**, **Reload 0.5**, **Spread 0**."}, {"show": ["cannon", "wing right", "wing left"], "focus": "wing left", "say": "Copy it to the other side (**Flip horizontal**) and set **Fire delay 0.5**, so the two wings take turns."}, {"live": true, "say": "**Play** and hold fire: the wings beat. Let go and they rest. Tick **Always fire** on both for wings that never stop."}], "tank": {"id": 100001, "name": "Flapper", "minLevel": 1, "body": {"sides": 0, "size": 46}, "projectiles": [{"name": "Wingbeat", "base": "bullet", "sides": -1, "color": 19}, {"name": "Bullet", "base": "bullet", "sides": -1}], "invisibility": {"gain": 0.03076923076923077, "lossOnHit": 0.05}, "statsMaxLevel": [7, 7, 7, 7, 7, 7, 7, 7], "upgradesFrom": [0], "barrels": [{"bulletType": "bullet", "projectile": 0, "angle": 1.2905, "offset": -2.7082, "distance": 137.3608, "startDistance": 19.5107, "heightMultiplier": 0.7143, "muzzleScale": 0.4667, "color": 19, "order": 0, "editor": {"name": "wing right"}, "damageMultiplier": 0.01, "penetrationMultiplier": 0.2, "bulletSizeMultiplier": 0.15, "speedMultiplier": 0.1, "lifetime": 0.1, "recoilMultiplier": 0, "knockbackMultiplier": 0, "reloadMultiplier": 0.5, "spreadMultiplier": 0}, {"bulletType": "bullet", "projectile": 0, "angle": -1.2905, "offset": 2.7082, "distance": 137.3608, "startDistance": 19.5107, "heightMultiplier": 0.7143, "muzzleScale": 0.4667, "color": 19, "order": 1, "editor": {"name": "wing left"}, "damageMultiplier": 0.01, "penetrationMultiplier": 0.2, "bulletSizeMultiplier": 0.15, "speedMultiplier": 0.1, "lifetime": 0.1, "recoilMultiplier": 0, "knockbackMultiplier": 0, "reloadMultiplier": 0.5, "spreadMultiplier": 0, "delay": 0.5}, {"bulletType": "bullet", "projectile": 1, "distance": 85, "order": 2, "editor": {"name": "cannon"}}]}, "packFile": "lesson-04-pistons.diep-pack", "packName": "Lesson 04 Pistons", "author": "☀️"}</script><noscript>The interactive demo needs JavaScript.</noscript></div>
+<h2>Numbers that matter</h2>
+<table><thead><tr><th>Speck field</th><th>Value</th><th>Why</th></tr></thead><tbody><tr><td>Damage, Penetration</td><td>0.01, 0.2</td><td>So it hurts nothing and dies on contact</td></tr><tr><td>Bullet size, Bullet speed, Lifetime</td><td>0.15, 0.1, 0.1 s</td><td>A dot that vanishes at the muzzle. White specks read as sparkle</td></tr><tr><td>Recoil, Knockback</td><td>0, 0</td><td>So the wing beats do not push the tank around</td></tr><tr><td>Reload</td><td>0.5</td><td>Beat rate: lower is faster, and costs more budget</td></tr><tr><td>Fire delay</td><td>0 and 0.5</td><td>The pair alternates; 0.25 steps four legs round</td></tr></tbody></table>
+<h2>Gotchas</h2>
+<ul><li>Every pumping part is a firing barrel and counts against the lobby's budget (lesson 15): 120 entities a second with Reload maxed. Ten pistons at Reload 0.5 can be refused. Put the <b>Reload</b> stat cap to 0 on tanks that move a lot.</li><li>The pump only shows while the barrel fires: on click, or always with <b>Always fire</b>.</li><li>Thin and moving are at odds. A limb is either slender and still, or about 0.5× wide and pumping.</li><li>The speck is a real bullet for a tenth of a second; it is not drawn with the team colour because its projectile has a colour of its own (White).</li></ul>
+<h2>Where we used it</h2>
+<div class="seen"><figure><img src="img/halloween-rattlebones.png" alt="Rattlebones: a chattering jaw" loading="lazy"><figcaption>Rattlebones: a chattering jaw</figcaption></figure><figure><img src="img/halloween-poltergeist.png" alt="Poltergeist: flailing arms and a rattling chain" loading="lazy"><figcaption>Poltergeist: flailing arms and a rattling chain</figcaption></figure><figure><img src="img/halloween-frankensmash.png" alt="Frankensmash: brows that twitch" loading="lazy"><figcaption>Frankensmash: brows that twitch</figcaption></figure></div></article><div class="nav-row"><a href="03-spin-pulse.html">‹ Spinning parts and a pulsing light</a><a href="index.html">All lessons</a><a href="05-eyes.html">Eyes that watch ›</a></div>
+</main>
+<footer>Packs and lessons by Sunshine ☀️ · built with the <a href="https://github.com/RedNebulaSunshine/diep-pack-skill">diep-pack skill</a> · <a href="https://github.com/RedNebulaSunshine/diep-tank-lessons">source, issues and corrections</a> · MIT. Diep.io and its editor belong to the game's publisher; this site is not affiliated with them.</footer>
+<script src="assets/tank.js"></script>
+<script src="assets/editor.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ghosts that fade · Tank lessons</title>
+<meta name="description" content="Invisibility is three numbers, and parts marked Visible while invisible stay drawn while the rest of the tank is gone.">
+<meta property="og:title" content="Ghosts that fade">
+<meta property="og:description" content="Invisibility is three numbers, and parts marked Visible while invisible stay drawn while the rest of the tank is gone.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://rednebulasunshine.github.io/diep-tank-lessons/14-ghost.html">
+<meta property="og:image" content="https://rednebulasunshine.github.io/diep-tank-lessons/img/lesson-14-ghost-haunt.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-head"><a class="brand" href="index.html">☀️ Tank lessons</a><span class="crumbs">how our diep.io tanks do what they do</span></header>
+<main>
+<article class="card"><div class="kv">Lesson 14</div><h1>Ghosts that fade</h1><p class="summary">Invisibility is three numbers, and parts marked Visible while invisible stay drawn while the rest of the tank is gone.</p><h2>What you see</h2>
+<p>A tank that fades out when it stands still, leaving two yellow eyes hanging in the air. Move or fire and it is back.</p>
+<h2>The trick</h2>
+<p>The <b>Invisibility</b> section on the tank: <b>Invisible</b> on, <b>Time to vanish</b> (seconds from fully visible to gone while idle), <b>Reveal distance</b> (enemies this close still see it faintly) and <b>Hits to reveal</b>. That is the stock Stalker. The ghostly part is <b>Visible while invisible</b> on the eye parts, which keeps them drawn while the body fades.</p>
+<div class="scene" data-scene><script type="application/json">{"steps": [{"show": ["cannon"], "focus": "Tank body", "say": "Under **Invisibility**: **Invisible** on, **Time to vanish 1.3 s**, **Reveal distance 450**, **Hits to reveal 7**. The stock Stalker's numbers."}, {"show": "all", "focus": "eye left (visible while invisible)", "say": "Two Yellow circles of **Size 7** over the body with **Visible while invisible** ticked: they stay drawn when everything else has faded."}, {"live": true, "say": "**Play.** Stop moving and firing: the tank fades in about a second and the eyes hang in the air. Move or fire and it is back."}], "tank": {"id": 100001, "name": "Haunt", "minLevel": 1, "body": {"sides": 0, "size": 50}, "projectiles": [{"name": "Bullet", "base": "bullet", "sides": -1}], "invisibility": {"enabled": true, "gain": 0.03076923076923077, "revealDistance": 450, "lossOnHit": 0.05}, "statsMaxLevel": [7, 7, 7, 7, 7, 7, 7, 7], "upgradesFrom": [0], "barrels": [{"bulletType": "bullet", "projectile": 0, "order": 0, "editor": {"name": "cannon"}}], "bodyShapes": [{"sides": 0, "size": 7, "xOffset": 16, "yOffset": -16, "aboveBody": true, "color": 8, "staysVisible": true, "order": 1, "editor": {"name": "eye left (visible while invisible)"}}, {"sides": 0, "size": 7, "xOffset": 16, "yOffset": 16, "aboveBody": true, "color": 8, "staysVisible": true, "order": 2, "editor": {"name": "eye right (visible while invisible)"}}]}, "packFile": "lesson-14-ghost.diep-pack", "packName": "Lesson 14 Ghost", "author": "☀️"}</script><noscript>The interactive demo needs JavaScript.</noscript></div>
+<h2>Numbers that matter</h2>
+<table><thead><tr><th>Field</th><th>Stalker</th><th>Landmine</th><th>Notes</th></tr></thead><tbody><tr><td>Time to vanish</td><td>1.3 s</td><td>10 s</td><td>The editor accepts 0.1 to 60 s</td></tr><tr><td>Reveal distance</td><td>450</td><td>650</td><td>0 never reveals</td></tr><tr><td>Hits to reveal</td><td>7</td><td>7</td><td>The slider's far end is never</td></tr></tbody></table>
+<h2>Gotchas</h2>
+<ul><li>Shots never fade. A barrel on <b>Always fire</b> (a trail, a pumping leg) keeps marking where a faded tank lies, so keep auto-fire off a tank that hides, or make that the joke.</li><li>Only parts can stay visible, not barrels or turrets. Draw the glint with parts.</li><li>A faded tank is still there: it blocks, it takes body damage, and the lobby still counts its budget.</li></ul>
+<h2>Where we used it</h2>
+<div class="seen"><figure><img src="img/halloween-mary-shaw.png" alt="Mary Shaw: a ghost that fades when still" loading="lazy"><figcaption>Mary Shaw: a ghost that fades when still</figcaption></figure><figure><img src="img/halloween-bloody-mary.png" alt="Bloody Mary: eye glints that stay while faded" loading="lazy"><figcaption>Bloody Mary: eye glints that stay while faded</figcaption></figure></div></article><div class="nav-row"><a href="13-shots.html">‹ Shots that are pictures</a><a href="index.html">All lessons</a><a href="15-budget.html">Staying under the lobby&#x27;s budget ›</a></div>
+</main>
+<footer>Packs and lessons by Sunshine ☀️ · built with the <a href="https://github.com/RedNebulaSunshine/diep-pack-skill">diep-pack skill</a> · <a href="https://github.com/RedNebulaSunshine/diep-tank-lessons">source, issues and corrections</a> · MIT. Diep.io and its editor belong to the game's publisher; this site is not affiliated with them.</footer>
+<script src="assets/tank.js"></script>
+<script src="assets/editor.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shots that are pictures · Tank lessons</title>
+<meta name="description" content="A projectile has its own layers, so a bullet can be a bat, an egg, a skull or a spiky star with an eye.">
+<meta property="og:title" content="Shots that are pictures">
+<meta property="og:description" content="A projectile has its own layers, so a bullet can be a bat, an egg, a skull or a spiky star with an eye.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://rednebulasunshine.github.io/diep-tank-lessons/13-shots.html">
+<meta property="og:image" content="https://rednebulasunshine.github.io/diep-tank-lessons/img/lesson-13-shots-thrower.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-head"><a class="brand" href="index.html">☀️ Tank lessons</a><span class="crumbs">how our diep.io tanks do what they do</span></header>
+<main>
+<article class="card"><div class="kv">Lesson 13</div><h1>Shots that are pictures</h1><p class="summary">A projectile has its own layers, so a bullet can be a bat, an egg, a skull or a spiky star with an eye.</p><h2>What you see</h2>
+<p>A cannon that throws a spinning five-point star with an eye on it. In the Halloween pack the same idea gives bats, cats, chickens, bones, skulls, eggs and little ghosts.</p>
+<h2>The trick</h2>
+<p>Open <b>Projectiles</b> and a projectile has the same panel a tank has: its own shape (<b>Its own</b>, with <b>Sides</b> and <b>Drawn as a star</b>), a <b>Spin</b> so it turns as it flies, and layers. Barrels, parts and auto turrets ride on it exactly as they ride on a body, and in that view the projectile's disc counts as a body of Size 50, however big the barrel fires it. Decorate it like a hull.</p>
+<div class="scene" data-scene><script type="application/json">{"steps": [{"show": [], "focus": "Tank body", "say": "A plain body."}, {"subject": "Spiky star", "show": [], "focus": "Projectile", "say": "Under **Projectiles**: **Based on** Bullet, **Shape: Its own**, **Sides 5**, **Drawn as a star**, **Spin 0.15** so it turns as it flies. No colour set, so it keeps the team colour."}, {"subject": "Spiky star", "show": ["eye"], "focus": "eye", "say": "A White circle of **Size 16** over the disc. In this view the projectile's disc is a body of Size 50, so parts inside that radius go over it."}, {"subject": "Spiky star", "show": ["eye", "pupil"], "focus": "pupil", "say": "A Charcoal pupil, **Offset X 6**, ahead of centre so the star looks where it flies."}, {"show": ["star cannon"], "focus": "star cannon", "say": "Back on the tank: a stock cannon with **Fires: Spiky star**."}, {"live": true, "say": "**Play** and fire: every shot is a spinning star with an eye, and it is the team's colour."}], "tank": {"id": 100001, "name": "Thrower", "minLevel": 1, "body": {"sides": 0, "size": 50}, "projectiles": [{"name": "Spiky star", "base": "bullet", "sides": 5, "star": true, "spin": 0.15, "parts": [{"sides": 0, "size": 16, "aboveBody": true, "color": 19, "editor": {"name": "eye"}}, {"sides": 0, "size": 7, "xOffset": 6, "aboveBody": true, "color": 20, "editor": {"name": "pupil"}}]}], "invisibility": {"gain": 0.03076923076923077, "lossOnHit": 0.05}, "statsMaxLevel": [7, 7, 7, 7, 7, 7, 7, 7], "upgradesFrom": [0], "barrels": [{"bulletType": "bullet", "projectile": 0, "order": 0, "editor": {"name": "star cannon"}}]}, "packFile": "lesson-13-shots.diep-pack", "packName": "Lesson 13 Shots", "author": "☀️"}</script><noscript>The interactive demo needs JavaScript.</noscript></div>
+<h2>Numbers that matter</h2>
+<table><thead><tr><th>Field</th><th>Value</th><th>Notes</th></tr></thead><tbody><tr><td>Shape</td><td>Its own, Sides 5, star</td><td>"As usual for the kind" is round for a bullet, a triangle for a drone, a 3-point star for a trap</td></tr><tr><td>Spin</td><td>0.15</td><td>Rotation per tick; the stock missile spins at 0.1</td></tr><tr><td>Part offsets</td><td>within 50 for things on the disc</td><td>Beyond 50 for things that stick out</td></tr><tr><td>Barrel Bullet size</td><td>1</td><td>The whole picture scales with it; a 2× shot is twice the picture</td></tr></tbody></table>
+<h2>Gotchas</h2>
+<ul><li>Only the disc, and up to three <b>Collidable</b> parts, actually hit anything. The rest is paint.</li><li>Everything a shot carries is counted <b>every time it is fired</b> against the lobby's budget: a web of 24 rods costs 25 per shot (lesson 15).</li><li>A barrel riding a projectile can fire only a plain projectile that carries nothing; give it a decorated one and the editor swaps in a plain shot on import.</li><li>Up to 32 parts, 32 barrels and 8 turrets per projectile, but all of it counts toward the tank's 96 pieces.</li></ul>
+<h2>Where we used it</h2>
+<div class="seen"><figure><img src="img/halloween-dracula-proj-fluttering-bat.png" alt="Dracula&#x27;s fluttering bat" loading="lazy"><figcaption>Dracula's fluttering bat</figcaption></figure><figure><img src="img/halloween-bloody-mary-proj-wailing-ghost.png" alt="Bloody Mary&#x27;s wailing ghost" loading="lazy"><figcaption>Bloody Mary's wailing ghost</figcaption></figure><figure><img src="img/halloween-jeepers-proj-twirling-cane.png" alt="Jeepers&#x27; twirling cane" loading="lazy"><figcaption>Jeepers' twirling cane</figcaption></figure><figure><img src="img/halloween-little-devil-proj-egg.png" alt="Little Devil&#x27;s fried egg" loading="lazy"><figcaption>Little Devil's fried egg</figcaption></figure></div></article><div class="nav-row"><a href="12-hitbox.html">‹ Hiding the body, keeping a hitbox</a><a href="index.html">All lessons</a><a href="14-ghost.html">Ghosts that fade ›</a></div>
+</main>
+<footer>Packs and lessons by Sunshine ☀️ · built with the <a href="https://github.com/RedNebulaSunshine/diep-pack-skill">diep-pack skill</a> · <a href="https://github.com/RedNebulaSunshine/diep-tank-lessons">source, issues and corrections</a> · MIT. Diep.io and its editor belong to the game's publisher; this site is not affiliated with them.</footer>
+<script src="assets/tank.js"></script>
+<script src="assets/editor.js"></script>
+</body>
+</html>

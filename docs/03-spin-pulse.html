@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spinning parts and a pulsing light · Tank lessons</title>
+<meta name="description" content="Spin speed turns a part on its own, and two stars spinning against each other read as a light that pulses.">
+<meta property="og:title" content="Spinning parts and a pulsing light">
+<meta property="og:description" content="Spin speed turns a part on its own, and two stars spinning against each other read as a light that pulses.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://rednebulasunshine.github.io/diep-tank-lessons/03-spin-pulse.html">
+<meta property="og:image" content="https://rednebulasunshine.github.io/diep-tank-lessons/img/lesson-03-spin-and-pulse-lantern.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-head"><a class="brand" href="index.html">☀️ Tank lessons</a><span class="crumbs">how our diep.io tanks do what they do</span></header>
+<main>
+<article class="card"><div class="kv">Lesson 03</div><h1>Spinning parts and a pulsing light</h1><p class="summary">Spin speed turns a part on its own, and two stars spinning against each other read as a light that pulses.</p><h2>What you see</h2>
+<p>A gear that turns and a lantern that pulses. Neither fires anything, and neither costs a barrel: they are plain parts with <b>Spin speed</b> set.</p>
+<h2>The trick</h2>
+<p><b>Spin speed</b> on a part is rotation per tick, 25 ticks a second: 0.05 is about one turn every five seconds, 0.5 is the slider's end. The editor's preview does not animate, so you only see it in play.</p>
+<p>The pulse is a discovery a skill user sent in: put <b>two star parts on the same spot</b>, a bigger darker one under a smaller lighter one of the same hue, and give them <b>equal and opposite Spin speed</b>. When their spokes line up they look like one bright star; half a spoke later they interleave into a dimmer, rounder blob. The eye reads it as a light beating.</p>
+<div class="scene" data-scene><script type="application/json">{"steps": [{"show": ["cannon"], "focus": "Tank body", "say": "A plain tank. Everything here is a part, so no barrels and no budget."}, {"show": ["cannon", "gear", "gear hub"], "focus": "gear", "say": "The gear: an 8-point star (**Sides 8**, **Drawn as a star**) of **Size 28**, **Spin speed 0.05**. A Charcoal hub on top hides its centre."}, {"show": ["cannon", "gear", "gear hub", "lantern pole"], "focus": "lantern pole", "say": "A pole: a Brown barrel, **Fires: Nothing**, out to the tank's right."}, {"show": ["cannon", "gear", "gear hub", "lantern pole", "lantern back"], "focus": "lantern back", "say": "The lantern's back star: 3 spokes, Orange, **Size 21.6**, **Spin speed −0.05**, over the body."}, {"show": ["cannon", "gear", "gear hub", "lantern pole", "lantern back", "lantern front"], "focus": "lantern front", "say": "The front star: 3 spokes, Yellow, **Size 18**, same **Offset**, **Spin speed +0.05**. Aligned they are one bright star; interleaved, a dim disc. It beats about once a second."}, {"live": true, "say": "**Play.** The gear turns, the lantern pulses, and the tank is otherwise unchanged."}], "tank": {"id": 100001, "name": "Lantern", "minLevel": 1, "body": {"sides": 0, "size": 50}, "projectiles": [{"name": "Bullet", "base": "bullet", "sides": -1}], "invisibility": {"gain": 0.03076923076923077, "lossOnHit": 0.05}, "statsMaxLevel": [7, 7, 7, 7, 7, 7, 7, 7], "upgradesFrom": [0], "barrels": [{"bulletType": "bullet", "projectile": 0, "order": 0, "editor": {"name": "cannon"}}, {"bulletType": "none", "projectile": -1, "angle": 1.5708, "distance": 62, "startDistance": 30, "heightMultiplier": 0.1905, "color": 23, "order": 3, "editor": {"name": "lantern pole"}}], "bodyShapes": [{"sides": 8, "size": 28, "xOffset": -10, "yOffset": -78, "spinSpeed": 0.05, "star": true, "color": 1, "order": 1, "editor": {"name": "gear"}}, {"sides": 0, "size": 9, "xOffset": -10, "yOffset": -78, "color": 20, "order": 2, "editor": {"name": "gear hub"}}, {"sides": 3, "size": 21.6, "yOffset": 108, "spinSpeed": -0.05, "aboveBody": true, "star": true, "color": 16, "order": 4, "editor": {"name": "lantern back"}}, {"sides": 3, "size": 18, "yOffset": 108, "spinSpeed": 0.05, "aboveBody": true, "star": true, "color": 8, "order": 5, "editor": {"name": "lantern front"}}]}, "packFile": "lesson-03-spin-and-pulse.diep-pack", "packName": "Lesson 03 Spin and pulse", "author": "☀️"}</script><noscript>The interactive demo needs JavaScript.</noscript></div>
+<h2>Numbers that matter</h2>
+<table><thead><tr><th>Spokes</th><th>Spin speed</th><th>Beat</th></tr></thead><tbody><tr><td>3</td><td>±0.05</td><td>about once a second: a lantern, a heartbeat</td></tr><tr><td>3</td><td>±0.12</td><td>a flicker</td></tr><tr><td>6</td><td>±0.05</td><td>twice a second</td></tr></tbody></table>
+<p>Beat period in seconds is (360° ÷ spokes) ÷ (2 × spin × 25 × 57.3). Three or six spokes read as light; four looks mechanical.</p>
+<h2>Gotchas</h2>
+<ul><li>Both stars need exactly the same <b>Offset X</b> and <b>Offset Y</b>, and the smaller one must be the higher layer.</li><li>Give the stars their own colours. On Team color the pulse would change with the team.</li><li><b>Auto rotate</b> under Movement and durability spins the body itself; the barrels and your aim stay put.</li></ul>
+<h2>Where we used it</h2>
+<div class="seen"><figure><img src="img/halloween-troublemaker.png" alt="Troublemaker: a propeller beanie on Spin speed" loading="lazy"><figcaption>Troublemaker: a propeller beanie on Spin speed</figcaption></figure><figure><img src="img/halloween-frankensmash.png" alt="Frankensmash: spinning head bolts" loading="lazy"><figcaption>Frankensmash: spinning head bolts</figcaption></figure></div></article><div class="nav-row"><a href="02-line-art.html">‹ Drawing with barrels</a><a href="index.html">All lessons</a><a href="04-pistons.html">Parts that pump ›</a></div>
+</main>
+<footer>Packs and lessons by Sunshine ☀️ · built with the <a href="https://github.com/RedNebulaSunshine/diep-pack-skill">diep-pack skill</a> · <a href="https://github.com/RedNebulaSunshine/diep-tank-lessons">source, issues and corrections</a> · MIT. Diep.io and its editor belong to the game's publisher; this site is not affiliated with them.</footer>
+<script src="assets/tank.js"></script>
+<script src="assets/editor.js"></script>
+</body>
+</html>

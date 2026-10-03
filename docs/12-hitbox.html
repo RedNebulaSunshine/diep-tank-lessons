@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hiding the body, keeping a hitbox · Tank lessons</title>
+<meta name="description" content="Shrink the body to a dot and give the figure a hitbox of its own with a Collidable part.">
+<meta property="og:title" content="Hiding the body, keeping a hitbox">
+<meta property="og:description" content="Shrink the body to a dot and give the figure a hitbox of its own with a Collidable part.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://rednebulasunshine.github.io/diep-tank-lessons/12-hitbox.html">
+<meta property="og:image" content="https://rednebulasunshine.github.io/diep-tank-lessons/img/lesson-12-hitbox-shell.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-head"><a class="brand" href="index.html">☀️ Tank lessons</a><span class="crumbs">how our diep.io tanks do what they do</span></header>
+<main>
+<article class="card"><div class="kv">Lesson 12</div><h1>Hiding the body, keeping a hitbox</h1><p class="summary">Shrink the body to a dot and give the figure a hitbox of its own with a Collidable part.</p><h2>What you see</h2>
+<p>A big armoured shell with a tiny blue dot at its heart. The dot is the body. The shell is what enemies run into.</p>
+<h2>The trick</h2>
+<p>Only the body and parts marked <b>Collidable (hitbox + body damage)</b> collide; everything else is picture. <b>Body size 8</b> shrinks the body (and its hitbox) to a dot, so the figure can be any shape you draw. Then tick <b>Collidable</b> on the one big part that should take the hits. It collides at roughly half to two thirds of its drawn size, and it deals body damage like a hull.</p>
+<div class="scene" data-scene><script type="application/json">{"live": {"enemy": true}, "steps": [{"show": [], "focus": "Tank body", "say": "**Body size 8**: the body shrinks to a dot, and so does its hitbox. It stays on **Team color**, which keeps the team rule satisfied."}, {"show": ["cannon"], "focus": "cannon", "say": "A long cannon, **Length 110**, so it reaches out of the shell. Under the body, and drawn before the shell so the shell covers its root."}, {"show": ["cannon", "shell (collidable)"], "focus": "shell (collidable)", "say": "An octagon of **Size 78** in Plum with **Collidable** ticked. Shapes, tanks and bullets now hit it well outside the dot, though inside its drawn rim."}, {"show": "all", "focus": "shell top", "say": "A smaller Pink octagon on top is just drawing: no hitbox, no cost."}, {"live": true, "say": "**Play.** The shell takes the hits; the dot in the middle is the tank's real centre."}], "tank": {"id": 100001, "name": "Shell", "minLevel": 1, "body": {"sides": 0, "size": 8}, "projectiles": [{"name": "Bullet", "base": "bullet", "sides": -1}], "invisibility": {"gain": 0.03076923076923077, "lossOnHit": 0.05}, "statsMaxLevel": [7, 7, 7, 7, 7, 7, 7, 7], "upgradesFrom": [0], "barrels": [{"bulletType": "bullet", "projectile": 0, "distance": 110, "order": 0, "editor": {"name": "cannon"}}], "bodyShapes": [{"sides": 8, "size": 78, "color": 26, "collidable": true, "order": 1, "editor": {"name": "shell (collidable)"}}, {"sides": 8, "size": 58, "color": 11, "order": 2, "editor": {"name": "shell top"}}]}, "packFile": "lesson-12-hitbox.diep-pack", "packName": "Lesson 12 Hitbox", "author": "☀️"}</script><noscript>The interactive demo needs JavaScript.</noscript></div>
+<h2>Numbers that matter</h2>
+<table><thead><tr><th>Field</th><th>Value</th><th>Notes</th></tr></thead><tbody><tr><td>Body size</td><td>5 to 8</td><td>Small enough to vanish behind the parts</td></tr><tr><td>Collidable part Size</td><td>78 (up to 150)</td><td>Collidable parts are capped at 150 on import</td></tr><tr><td>Collidable parts</td><td>3 at most</td><td>The editor quietly clears the flag on every later one</td></tr><tr><td>Contact edge</td><td>about 0.5 to 0.67 × Size</td><td>Measured in play with rings of dots; coarse</td></tr></tbody></table>
+<h2>Gotchas</h2>
+<ul><li>A figure that is not collidable is a bigger <i>picture</i> and nothing else: enemies shoot through the wings and hit the dot.</li><li>Collidable parts take knockback and body damage like a body. Three big ones make a wide, slow-feeling tank.</li><li>The same flag works on a projectile's parts: a thrown web catches shapes only where its collidable hooks are (lesson 13).</li></ul></article><div class="nav-row"><a href="11-dash.html">‹ A dash on right click</a><a href="index.html">All lessons</a><a href="13-shots.html">Shots that are pictures ›</a></div>
+</main>
+<footer>Packs and lessons by Sunshine ☀️ · built with the <a href="https://github.com/RedNebulaSunshine/diep-pack-skill">diep-pack skill</a> · <a href="https://github.com/RedNebulaSunshine/diep-tank-lessons">source, issues and corrections</a> · MIT. Diep.io and its editor belong to the game's publisher; this site is not affiliated with them.</footer>
+<script src="assets/tank.js"></script>
+<script src="assets/editor.js"></script>
+</body>
+</html>
