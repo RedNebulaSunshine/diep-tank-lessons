@@ -24,6 +24,9 @@ pick apart in the real editor. Written for players who found the Halloween pack 
 | 13 | Shots that are pictures |
 | 14 | Ghosts that fade |
 | 15 | Staying under the lobby's budget |
+| 16 | A missile that steers itself |
+| 17 | A missile that bursts |
+| 18 | A salvo that fans out |
 
 ## How it is built
 
@@ -58,4 +61,5 @@ MIT. Lessons, demo tanks and site by Sunshine ☀️ (RedNebulaSunshine). Diep.i
 designs and the sandbox editor belong to the game's publisher; this project is not
 affiliated with them. The living-limb, cursor-pivot, trail, dash and web techniques were
 first seen in packs built by other players; the pulsing light was sent in by a user of the
-skill.
+skill, and the guided missiles (lessons 16 to 18) by a player who wrote them up and sent a
+sample pack.

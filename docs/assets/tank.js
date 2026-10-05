@@ -351,12 +351,22 @@
       const k = since < 0.35 ? 10 * Math.exp(-7 * since) * Math.min(1, since * 30) : 0;
       g.pumpEl.setAttribute('transform', k > 0.05 ? `translate(${fmt(-k)} 0)` : '');
     }
+    // -- right click sets off every shot whose Burst says so
+    if (this.fire2 && !this.prevFire2) {
+      for (let i = this.shots.length - 1; i >= 0; i--) {
+        const s = this.shots[i];
+        if (s.proj.burst && s.proj.burst.onSecondary) { this._expire(s, 'onSecondary'); this.shots.splice(i, 1); }
+      }
+    }
+    this.prevFire2 = this.fire2;
     // -- shots
     for (let i = this.shots.length - 1; i >= 0; i--) {
       const s = this.shots[i]; s.age += dt;
-      if (s.age >= s.life) { this._expire(s); this.shots.splice(i, 1); continue; }
+      if (s.age >= s.life) { this._expire(s, 'onExpire'); this.shots.splice(i, 1); continue; }
       const sp = s.launch + (s.cruise - s.launch) * Math.min(1, s.age / 0.35);
-      s.pos[0] += s.dir[0] * sp * dt; s.pos[1] += s.dir[1] * sp * dt; s.ang += s.spin * TICKS * dt;
+      if (s.subs.length) this._shotGuns(s, dt);
+      s.pos[0] += (s.dir[0] * sp + s.vel[0]) * dt; s.pos[1] += (s.dir[1] * sp + s.vel[1]) * dt; s.ang += s.spin * TICKS * dt;
+      const sd = Math.exp(-2 * dt); s.vel[0] *= sd; s.vel[1] *= sd;
       s.el.setAttribute('transform', `translate(${fmt(s.pos[0])} ${fmt(s.pos[1])}) rotate(${fmt(deg(s.ang))}) scale(${fmt(s.r / HULL_R)})`);
     }
     // -- fading
@@ -406,16 +416,65 @@
     g.appendChild(built.root);
     const cruise = 210 * hi(num(b.speedMultiplier, 1)), launch = 210 * hi(num(b.initialVelocityMultiplier, 1));
     const shot = { el: g, pos: world.slice(), dir: [Math.cos(dirA), Math.sin(dirA)], cruise, launch, life: hi(num(b.lifetime, 3)), age: 0,
-      r, ang: dirA, spin: num(proj.spin, 0), proj, built };
+      r, ang: dirA, spin: num(proj.spin, 0), proj, built, vel: [0, 0], launchAng: dirA, subs: [], turrets: [] };
+    if (parentR === 1) {   // only a tank barrel's shot carries guns that work: a spawned shot is plain (spec 5)
+      shot.turrets = built.parts.filter(p => p.kind === 'turret');
+      for (const t of shot.turrets) { t.heading = dirA + t.rest; t.vel = 0; t.locked = false; }
+      shot.subs = built.parts
+        .filter(p => p.kind === 'barrel' && p.data.bulletType && p.data.bulletType !== 'none' && num(p.data.projectile, -1) >= 0)
+        .map(p => ({ b: p.data, next: null, turret: p.data.mountTurret === undefined ? null : (shot.turrets.find(t => t.index === p.data.mountTurret) || null) }))
+        .filter(q => { const f = q.b.flags || {}; return !f.firesOnDeath && (f.forceFire || q.turret || proj.base === 'drone'); });
+    }
     this.shots.push(shot);
     g.setAttribute('transform', `translate(${fmt(world[0])} ${fmt(world[1])}) rotate(${fmt(deg(dirA))}) scale(${fmt(r / HULL_R)})`);
     if (this.shots.length > 140) { const old = this.shots.shift(); old.el.remove(); }
     return shot;
   };
-  Live.prototype._expire = function (s) {
+  /* Guns riding a shot, the missile lessons: an engine (Always fire; its recoil pushes the shot),
+     a seeker or fuse turret that tracks the enemy inside a wedge measured from the LAUNCH heading,
+     a turret gun that fires while its turret is locked on, and a drone's plain sub-barrel that
+     fires while the owner holds fire. A sketch: the game's own speeds differ. */
+  Live.prototype._shotGuns = function (s, dt) {
+    const scale = s.r / HULL_R;
+    for (const t of s.turrets) {
+      const restAbs = s.launchAng + t.rest;
+      let aim = restAbs; t.locked = false;
+      if (this.enemy && t.range > 0) {
+        const d = Math.hypot(this.enemyPos[0] - s.pos[0], this.enemyPos[1] - s.pos[1]);
+        const a = Math.atan2(this.enemyPos[1] - s.pos[1], this.enemyPos[0] - s.pos[0]);
+        if (d <= t.range && (t.arc <= 0 || Math.abs(wrap(a - restAbs)) <= t.arc)) { aim = a; t.locked = true; }
+      }
+      const err = wrap(aim - t.heading);
+      t.vel += (90 * err - 11 * t.vel) * dt; t.heading += t.vel * dt;
+      t.rotEl.setAttribute('transform', `rotate(${fmt(deg(wrap(t.heading - s.ang)))})`);
+    }
+    for (const q of s.subs) {
+      const b = q.b, f = b.flags || {}, t = q.turret;
+      const trig = f.forceFire || (t ? t.locked : (this.fire && !f.firesOnSecondary));
+      if (!trig) { if (!t) q.next = null; continue; }
+      const period = 15 / TICKS * num(b.reloadMultiplier, 1);
+      if (q.next === null) q.next = this.t + period * num(b.delay, 0);
+      if (this.t < q.next) continue;
+      q.next += period;
+      const dirA = (t ? t.heading : s.ang) + num(b.angle, 0);
+      const m = rot([num(b.startDistance, 0) + Math.min(num(b.distance, 95), 500), num(b.offset, 0)], dirA);
+      const world = [s.pos[0] + m[0] * scale, s.pos[1] + m[1] * scale];
+      const child = (this.tank.projectiles || [])[num(b.projectile, -1)];
+      const n = clamp(num(b.numBullets, 1), 1, 10);
+      if (child) {
+        for (let k = 0; k < n; k++) {
+          const spread = (num(b.spreadMultiplier, 1) * 0.08) * (Math.random() - 0.5) * (n > 1 ? 3 : 1);
+          this._spawn(child, b, world, dirA + spread, s.r);
+        }
+      }
+      const rec = num(b.recoilMultiplier, 1) * 28;   // recoil on the shot, opposite to the gun
+      s.vel[0] -= Math.cos(dirA) * rec; s.vel[1] -= Math.sin(dirA) * rec;
+    }
+  };
+  Live.prototype._expire = function (s, cause) {
     s.el.remove();
     const proj = s.proj, burst = proj.burst || {};
-    if (burst.onExpire && proj.barrels) {
+    if (burst[cause || 'onExpire'] && proj.barrels) {
       for (const sb of proj.barrels) {
         if (!(sb.flags && sb.flags.firesOnDeath)) continue;
         const child = (this.tank.projectiles || [])[num(sb.projectile, -1)]; if (!child) continue;

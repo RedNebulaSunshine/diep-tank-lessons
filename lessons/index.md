@@ -17,6 +17,6 @@ Start with lesson 00 if you have never looked at the Layers panel; otherwise jum
 2. Pick **Import as new pack**. (**Add to this pack** also works and puts the demo tank into the pack you are editing.)
 3. Select the tank and press **Play** to spawn as it. Lesson tanks sit at level 1 under the stock Tank, so they also show up as an upgrade.
 
-Or press **Copy tank JSON** on a lesson, open a pack of yours in the editor and press **Ctrl+V**. All fifteen demo tanks are also in one pack: [tank-lessons.diep-pack](packs/tank-lessons.diep-pack).
+Or press **Copy tank JSON** on a lesson, open a pack of yours in the editor and press **Ctrl+V**. All nineteen demo tanks are also in one pack: [tank-lessons.diep-pack](packs/tank-lessons.diep-pack).
 
 > The demos here are a sketch of the game, not the game: speeds and timings are approximate, and the editor's own preview does not animate at all. What the field names and numbers do is exact.
