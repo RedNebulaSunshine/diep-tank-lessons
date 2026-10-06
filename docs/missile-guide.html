@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The guide to creating missiles · Tank lessons</title>
+<meta name="description" content="A write-up supplied by Random Troller, the author of the seeking projectile technique: unguided and guided missiles, warheads, the proximity interceptor and the MJRV salvo.">
+<meta property="og:title" content="The guide to creating missiles">
+<meta property="og:description" content="A write-up supplied by Random Troller, the author of the seeking projectile technique: unguided and guided missiles, warheads, the proximity interceptor and the MJRV salvo.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://rednebulasunshine.github.io/diep-tank-lessons/missile-guide.html">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="site-head"><a class="brand" href="index.html">☀️ Tank lessons</a><span class="crumbs">how our diep.io tanks do what they do</span></header>
+<main>
+<article class="card"><div class="kv">Write-up</div><h1>The guide to creating missiles</h1><p class="summary">A write-up supplied by Random Troller, the author of the seeking projectile technique: unguided and guided missiles, warheads, the proximity interceptor and the MJRV salvo.</p><blockquote><p>A write-up supplied by <b>Random Troller</b>, the author of the seeking projectile technique, lightly edited from the PDF he sent in. Editor field names are in <b>bold</b>.</p></blockquote>
+<h2>Basic unguided missiles</h2>
+<p>The core principle of a missile is a self-propelling bullet. In the tank editor, this translates into a rear-firing barrel placed on the bullet itself. This barrel has a few core features:</p>
+<ul><li>A low <b>Reload</b>, so it fires rapidly</li><li>A high <b>Recoil</b> (3 or more) to generate thrust. It can be lowered if you want the missile to keep its speed from the <b>Bullet speed</b> stat.</li><li>Low or no bullet <b>Damage</b></li><li>Low or no <b>Bullet speed</b></li><li>A low bullet <b>Lifetime</b>, crucial in keeping your tank under budget</li><li><b>Always fire</b> (MUST HAVE)</li></ul>
+<p>The primary features are the reload, recoil, bullet lifetime and always fire.</p>
+<h2>Basic guided missile</h2>
+<p>To create a guided missile, we need a targeting system for the missile. Just like the real world, you can target the missile with a laser (manual targeting), or the missile can target by itself (automatic targeting). To make a manually targeted missile, use a drone. For automatic, use an auto turret.</p>
+<p>For the rest of this guide, all simple guided missiles are done with auto turrets.</p>
+<p>In the tank editor, add an auto turret to the missile. Make sure the turret is layered <b>below</b> the bullet, and the barrel is layered above the turret. This way the turret is hidden.</p>
+<p>The auto turret itself has a few core components:</p>
+<ul><li>The tracking <b>Range</b></li><li>The <b>Arc</b></li><li><b>Aims with cursor</b></li></ul>
+<p>Once the turret is on the bullet and facing 0 degrees, take the thrust barrel and put it at 180 degrees relative to the turret. <b>DO NOT ROTATE THE TURRET 180!</b></p>
+<p>The tracking range is how far out the missile can track its target. The arc is the angle the missile can turn to hit the target.</p>
+<p><b>Note:</b> the arc's angle is relative to where the missile was <b>fired</b>, not to the missile itself. This means that <b>only a 0 arc turret can chase</b>, as with any other arc it is possible to escape the missile's targeting.</p>
+<h3>Key concept: the target field</h3>
+<p>Arc and range merge together to give the missile its "target field". The larger the missile's target field, the more ground it can hit. However, the larger the field, the harder it is to hit a specific target. In general, a large arc with a low range, or a small arc with a long range, is best. With the large arc, you want the missile to be powered mainly by thrust from the recoil of the missile's engine.</p>
+<p>This concept of the target field is especially critical for a 0 arc missile. While it can chase any target, its range must be quite small to stop it instantly tracking a target that is behind the tank.</p>
+<p>The example tank uses a missile with an arc of 25 and a range of 2000.</p>
+<h2>Explosive guided missiles</h2>
+<p>The key idea behind a missile's explosion is to trigger it in one of two ways: <b>burst</b> or <b>right click</b>. In both cases, the payload is delivered by extra barrels placed on the bullet.</p>
+<h3>Payload options</h3>
+<p>For burst-triggered explosions, only traps and bullets are viable. For right-click-triggered explosions, drones are viable as well, provided the missile stays alive.</p>
+<p>There are two main ways to deliver the payload: one spread-focused barrel, or several accurate barrels.</p>
+<ul><li>A <b>spread-focused barrel</b> has two key characteristics: a high <b>Spread</b> and many <b>Bullets per shot</b>.</li><li>A <b>multiple-barrel payload</b> has lower spread, but several barrels are placed on the bullet. (You can also make the barrels invisible and put them anywhere on the bullet. If you want, you can even spin the bullet for more randomness.) Several barrels also let you have a full 360° explosion, whereas the single barrel fires in front of the missile.</li></ul>
+<p>In both cases, make the barrels very short, so they don't clip through and fire behind the target the missile strikes.</p>
+<p>In general, a single barrel with high spread is very efficient in entities, but not accurate. A multiple-barrel payload is more consistent, but expensive in entities.</p>
+<p>In an ideal world, the payload would be attached directly to the turret. That is bugged at the time of writing, so attach the payload to the bullet instead.</p>
+<h3>Triggering the payload</h3>
+<p>Once you have chosen your payload, you need to decide its trigger.</p>
+<ul><li>To trigger the payload with <b>right click</b>, select your payload barrels and set them to fire on right click instead (<b>Fires on right click</b>).</li><li>To trigger the payload with <b>burst</b>, you have three options: right click, getting destroyed, and running out of time. Tick the ones you want under <b>Burst</b>, then select the payload barrels and set them to <b>Fires when it bursts</b>.</li></ul>
+<p>The barrels carrying the payload have three key attributes: <b>Launch speed</b>, <b>Bullet speed</b> and bullet <b>Lifetime</b>. The first two set how fast the explosion expands; the last one sets how far it expands. In most cases you want a higher bullet speed and launch speed with a minimal lifetime. That also helps keep the missile under budget.</p>
+<p>The example is a single-barrel, randomised payload.</p>
+<h2>Proximity interceptor missile</h2>
+<p>For a proximity interceptor, the missile not only has to track the target, it must also explode <b>by itself</b> near or on the target. That may sound difficult, but the solution is quite literally another auto turret. This kind of missile has two turrets: one for thrust and targeting, and one to control the payload.</p>
+<p>To control the payload's trigger, you need to know these key components:</p>
+<ul><li>The turret <b>Arc</b></li><li>The turret <b>Range</b></li><li>The payload's <b>Reload</b></li></ul>
+<p>The first two control the payload's target field. The last one is especially important, as it stops the payload firing several times during the missile's life. Until an update lets barrels trigger a burst on the bullet they sit on, this is the way to limit how often the payload fires.</p>
+<p><b>Important:</b> the turret arc for interceptors cannot be too wide, or the firing mechanism will not work properly.</p>
+<p>Done correctly, the missile triggers its payload by itself when it is near the target.</p>
+<h2>Multiple Jointly Targeted Reentry Vehicle (MJRV)</h2>
+<p>Not as well known as the Multiple Independently targetable Reentry Vehicle (MIRV). The main limit here is the entities-per-volley limit, so every effort to cut the entities used is needed to make the MJRV possible.</p>
+<p>The key thing about the MJRV is that the missile doesn't "split" into more missiles: all the missiles are fired at the same time. Also important: the MJRV works with <b>drones</b>, not bullets.</p>
+<p>To make an MJRV, first create the missiles. They are based on drones, and they have two main components: the payload and the splitter.</p>
+<ul><li>The <b>payload</b> is the standard burst-triggered explosion: a single, spread-based barrel.</li><li>The <b>splitter</b> is what makes the MJRV work. In the example there are two missiles, one with a 90 degree splitter and the other with a −90 degree splitter. The key components of the splitter are a maxed-out (or very high) <b>Recoil</b> and a maxed-out (or very high) <b>Spread</b>. That lets the missiles split up properly in mid-air.</li></ul>
+<p>The barrel firing the missiles (the one on the tank) must have <b>0 Spread</b> and <b>0 Knockback</b>. Otherwise the missiles spread out before the splitters act. In the example, four of each missile are fired.</p>
+<h3>Firing several drones at once</h3>
+<p><b>Important!</b> The editor does not actually let you fire four drones at the same time. But you can trick it into letting a single drone barrel fire several at once, and control the spread and recoil of drones too. Step by step:</p>
+<ol><li>Create the missile. Make it a drone, and add the payload and splitter as usual.</li><li>Change the missile from a drone to a bullet type.</li><li>Go to the barrel that fires the missile. Now that it is a "bullet", recoil and spread can be adjusted.</li><li>Set the number of missiles you want to fire (<b>Bullets per shot</b>), and set <b>Spread</b> and <b>Knockback</b> to 0.</li><li>Go back to the missile and change its type back to drone. Now when you fire, the drone keeps the settings it had as a bullet: the spread, the recoil and the number per shot.</li></ol>
+<p>Once that is done and the splitter is set up, set up the firing mechanism for the missile and the MJRV is complete. Because it is drone-based, you need to <b>hold down left click</b> for the MJRV to work.</p></article><div class="nav-row"><a href="index.html">All lessons</a></div>
+</main>
+<footer>Packs and lessons by Sunshine ☀️ · built with the <a href="https://github.com/RedNebulaSunshine/diep-pack-skill">diep-pack skill</a> · <a href="https://github.com/RedNebulaSunshine/diep-tank-lessons">source, issues and corrections</a> · MIT. Diep.io and its editor belong to the game's publisher; this site is not affiliated with them.</footer>
+<script src="assets/tank.js"></script>
+<script src="assets/editor.js"></script>
+</body>
+</html>

@@ -47,3 +47,5 @@ Once a barrel fires a drone, the editor's form hides **Bullets per shot**, **Spr
 - The limit here is the 64 per volley, not the per-second budget. More missiles means fewer shards each.
 - One tube gives a one-sided fan; the second tube with the opposite splitter angle gives the other side. Same spot, same reload, so they fire together.
 - What **Max drones 2** does when six are fired per shot is not pinned down; the sample pack ships with 2 and works.
+
+The [guide to creating missiles](missile-guide.html) is a write-up supplied by Random Troller, the author of the seeking projectile technique.

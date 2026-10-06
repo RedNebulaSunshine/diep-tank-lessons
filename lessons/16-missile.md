@@ -52,4 +52,4 @@ Arc and Range together are the missile's **target field**. Wide and deep covers 
 - In the projectile's view the bullet counts as a body of Size 50, so the 188-long engine is also the missile's drawn tail, and it scales with the launcher's Bullet size.
 - A manually guided missile is the same engine on a controllable drone: the player's cursor steers instead of the turret.
 
-This lesson and the next two come from a write-up and a sample pack that a player of the [diep-pack skill](https://github.com/RedNebulaSunshine/diep-pack-skill) sent in. Thank you.
+The [guide to creating missiles](missile-guide.html) is a write-up supplied by Random Troller, the author of the seeking projectile technique.

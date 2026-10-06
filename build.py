@@ -306,6 +306,22 @@ def build_pages():
             fh.write(out)
         print("page:", meta["slug"] + ".html")
     build_index(lessons)
+    build_guides()
+
+
+def build_guides():
+    """Pages outside the numbered lessons (lessons/guides/*.md), linked from the lessons that use them."""
+    for f in sorted(glob.glob(os.path.join(LESSONS, "guides", "*.md"))):
+        with open(f, encoding="utf-8") as fh:
+            meta, body = parse_front(fh.read())
+        meta.setdefault("slug", os.path.splitext(os.path.basename(f))[0])
+        content = md_to_html(body, lambda text: "")
+        page = (f'<article class="card"><div class="kv">{html.escape(meta.get("kicker", "Guide"))}</div><h1>{html.escape(meta["title"])}</h1>'
+                f'<p class="summary">{inline(meta.get("summary", ""))}</p>{content}</article>'
+                '<div class="nav-row"><a href="index.html">All lessons</a></div>')
+        with open(os.path.join(DOCS, meta["slug"] + ".html"), "w", encoding="utf-8") as fh:
+            fh.write(layout(meta["title"], meta.get("summary", ""), page, None, meta["slug"] + ".html"))
+        print("page:", meta["slug"] + ".html")
 
 
 def build_index(lessons):
