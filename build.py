@@ -230,7 +230,9 @@ def scene_block(text, meta):
     tank = next((t for t in pack["tanks"] if t["name"] == name), None)
     if tank is None:
         sys.exit(f"{meta.get('slug')}: no tank named {name!r} in {slug}")
-    cfg.update(tank=tank, packFile=slug + ".diep-pack", packName=pack.get("name"), author=pack.get("author"))
+    label = "#C%d" % (pack["tanks"].index(tank) + 1)        # the editor's label for a custom tank (pack order)
+    boss = next((b for b in pack.get("bosses", []) if b.get("tank") == tank.get("id")), None)
+    cfg.update(tank=tank, packFile=slug + ".diep-pack", packName=pack.get("name"), author=pack.get("author"), label=label, boss=boss)
     payload = json.dumps(cfg, ensure_ascii=False).replace("</", "<\\/")
     return f'<div class="scene" data-scene><script type="application/json">{payload}</script><noscript>The interactive demo needs JavaScript.</noscript></div>'
 

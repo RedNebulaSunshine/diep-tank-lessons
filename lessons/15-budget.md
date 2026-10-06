@@ -1,6 +1,8 @@
 ---
 title: Staying under the lobby's budget
 summary: The lobby refuses a tank that fires too much, keeps too much alive or has too many pieces; here is what counts and the one stat that buys you room.
+pack: lesson-15-budget
+tank: Thrifty
 ---
 
 ## What you see
@@ -30,6 +32,24 @@ Every moving trick in these lessons is a barrel that fires: pistons, bite points
 ## The one stat that buys room
 
 The **Stat points** row at the bottom of the tank's panel sets the max level of each stat. Set **Reload** to **0** and every barrel fires at its slowest, so the whole tank costs a fraction of the budget. A player-built character pack does this on 47 of its 60 playable classes, and it is how our tanks fit a dozen moving parts under the line. Players lose the Reload upgrade, which for a figure that fights with jaws and limbs is no loss.
+
+```scene
+{"steps": [
+ {"show": ["wing right", "wing left"], "focus": "wing right", "say": "Two pumping wings from lesson 04: each is a barrel firing a tiny speck at **Reload 0.5**. At Reload cap 7 that is about 6 shots a second each."},
+ {"show": ["wing right", "wing left", "trail dropper"], "focus": "trail dropper", "say": "A trail dropper from lesson 10 on **Always fire**, **Reload 0.25**: another 12 a second or so at cap 7, each piece alive for 1.5 s."},
+ {"show": "all", "focus": "Tank body", "say": "Look at **Stat points**: Reload is **0**. Every barrel now fires at the level-0 rate, so the same wings and trail cost about half of what they would at cap 7, and far less than at cap 12."},
+ {"live": true, "say": "**Play.** The wings pump and the trail lays down; the pack screen would show this tank well under the line."}
+]}
+```
+
+## The arena has a budget too
+
+Since the editor update of October 2026 the lobby also refuses a pack whose **custom shapes** would fill the map. Over every shape that spawns (your custom ones that are enabled, plus the stock ones you have not hidden), each with its share of the spawn weights:
+
+- **Room**: the shares weighted by each shape's size squared, in units of a stock square, must average **5 squares or fewer** ("Shapes take too much room").
+- **Crowding**: no single shape may cover its own spawn ring more than **twice over** ("… crowds its spawn ring"). A big shape in a thin ring is what trips it.
+
+Both show up when the pack loads, with the number, so you know which shape to shrink or thin out. Our largest arena sits at under one fifth of the room limit.
 
 ## Reading the numbers before you import
 

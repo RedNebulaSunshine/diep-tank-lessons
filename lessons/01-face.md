@@ -15,6 +15,8 @@ A yellow face with eyes, a smile and blue cheeks. Enemies see the same face with
 
 The body is the only thing the game colours for you. Leave it on **Team color**, then cover it with a part of exactly the same size placed **over** the body, and draw the face on top of that. Anything you set to **Same color as the body** then follows the team too: the cheeks here, a collar, a hat band, the lining of a cape.
 
+Since the editor update of October 2026 there is a second way: paint the body with a **Custom color** (a hex code) instead of a palette swatch. A body coloured that way still gives its Same-color parts the **team** colour, so the cover is not needed (lesson 21). The cover is still the trick for a body in a palette colour.
+
 ```scene
 {"steps": [
  {"show": [], "focus": "Tank body", "say": "Keep the body on **Team color**. It is the hitbox, and the only thing the game recolours per team."},
@@ -38,7 +40,7 @@ The body is the only thing the game colours for you. Leave it on **Team color**,
 ## Gotchas
 
 - The cover must be **over** the body (above the Tank body row). Under it, the body paints over it and you see plain blue.
-- If you give the body a colour of its own, nothing follows the team any more, including Same-color parts. Cover it instead.
+- If you give the body a **palette** colour of its own, nothing follows the team any more, including Same-color parts. Cover it instead, or use a Custom (hex) colour, which keeps the Same-color parts on the team (lesson 21).
 - A figure that must be a fixed colour (a black cat, a white ghost) still needs a team spot somewhere: a collar, the eyes, a bubble.
 
 ## Where we used it
