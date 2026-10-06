@@ -53,7 +53,7 @@ The game has no "explode when near" switch, but it has something as good: a gun 
 ## Gotchas
 
 - Bullets and traps work as a warhead. Drones only work on a right-click payload (**Fires on right click** instead of **Fires when it bursts**) on a missile that stays alive.
-- The player who sent this could not get a warhead to work when mounted on the **seeker** turret itself. Keep it on the bullet, or on its own fuse turret.
+- Random Troller could not get a warhead to work when mounted on the **seeker** turret itself. Keep it on the bullet, or on its own fuse turret.
 - A Burst with nothing marked **Fires when it bursts** just ends the missile: on the Flak missile a right-click trigger would be a self-destruct, nothing more.
 - The fuse gun counts once per live missile in the budget, like the engine; at Reload 20 that is almost nothing.
 
