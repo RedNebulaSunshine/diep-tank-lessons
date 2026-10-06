@@ -31,11 +31,11 @@ Only the body and parts marked **Collidable (hitbox + body damage)** collide; ev
 |---|---|---|
 | Body size | 5 to 8 | Small enough to vanish behind the parts |
 | Collidable part Size | 78 (up to 150) | Collidable parts are capped at 150 on import |
-| Collidable parts | 3 at most | The editor quietly clears the flag on every later one |
+| Collidable parts | 8 at most | Since the update of October 2026 (it was 3). The editor quietly clears the flag on every later one, and on every part that rides another part (lesson 19). A projectile's parts still get 3 |
 | Contact edge | about 0.5 to 0.67 × Size | Measured in play with rings of dots; coarse |
 
 ## Gotchas
 
 - A figure that is not collidable is a bigger *picture* and nothing else: enemies shoot through the wings and hit the dot.
-- Collidable parts take knockback and body damage like a body. Three big ones make a wide, slow-feeling tank.
+- Collidable parts take knockback and body damage like a body. Several big ones make a wide, slow-feeling tank; eight plates in a ring all stopped shapes in play (October 2026).
 - The same flag works on a projectile's parts: a thrown web catches shapes only where its collidable hooks are (lesson 13).

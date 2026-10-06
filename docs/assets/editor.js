@@ -13,12 +13,20 @@
 
   // ---- the inspector's fields, in the editor's order ----------------------------------
   function F(label, value, kind, tip) { return { label, value: (kind === undefined || kind === 'num') && typeof value === 'number' ? fmtN(value) : value, kind: kind || 'num', tip }; }
-  function colorRow(label, idx, dflt) { const i = (idx === undefined || idx === null) ? dflt : idx; return { label, kind: 'color', idx: i, value: T.COLOR_NAMES[i] || ('Color ' + i) }; }
+  function colorRow(label, idx, dflt) {
+    const i = (idx === undefined || idx === null) ? dflt : idx;
+    if (T.isHex(i)) {   // the editor's Custom color: a Hex box and an Opacity slider
+      const a = T.alphaOf(i);
+      return { label, kind: 'color', idx: i, value: 'Custom · Hex ' + i.slice(0, 7).toLowerCase() + (a < 0.999 ? ' · Opacity ' + Math.round(a * 100) + ' %' : ''), tip: 'Custom color: any colour as #rrggbb, with Opacity below 100 % drawn see-through in play.' };
+    }
+    return { label, kind: 'color', idx: i, value: T.COLOR_NAMES[i] || ('Color ' + i) };
+  }
   function check(label, on, tip) { return { label, kind: 'check', on: !!on, tip }; }
 
-  function fieldsFor(part, model, tank) {
+  function fieldsFor(part, model, tank, boss) {
     const d = part.data || {}, S = [];
     const sameColor = idx => idx === 27 || idx === undefined || idx === null;
+    const isBoss = !!(tank.editor && tank.editor.boss);
     if (part.kind === 'body') {
       S.push({ head: 'Body', fields: [F('Body sides', num(d.sides, 0)), check('Drawn as a star', d.star), F('Angle', degF(d.angle)),
         F('Body size', num(d.size, 50), 'num', 'Radius at level 1. The whole tank grows as it levels.'),
@@ -33,7 +41,9 @@
         F('Reveal distance', num(inv.revealDistance, 0), 'num', 'Enemies this close see it faintly. 0 never reveals.'),
         F('Hits to reveal', loh > 0 ? fmtN(0.3 / loh + 1) : 'Never', 'text')] });
       if (tank.helpText) S.push({ head: 'Tip', fields: [F('Tip', tank.helpText, 'text', 'Shown to a player for ten seconds when they switch to this tank.')] });
-      S.push({ head: 'Stat points (max per stat)', fields: [F('Movement Speed · Reload · Bullet Damage · Bullet Penetration · Bullet Speed · Body Damage · Max Health · Health Regen', (tank.statsMaxLevel || [7, 7, 7, 7, 7, 7, 7, 7]).join(' · '), 'text')] });
+      S.push({ head: isBoss ? 'Stat levels (fixed for a boss)' : 'Stat points (max per stat)', hint: isBoss ? 'A boss plays every stat at level 7 and never regenerates; this panel is read-only.' : null,
+        fields: [F('Movement Speed · Reload · Bullet Damage · Bullet Penetration · Bullet Speed · Body Damage · Max Health · Health Regen', (tank.statsMaxLevel || [7, 7, 7, 7, 7, 7, 7, 7]).join(' · '), 'text')] });
+      if (boss) S.push.apply(S, bossSections(boss));
     } else if (part.kind === 'barrel') {
       const fl = d.flags || {};
       const geo = [F('Angle', degF(d.angle)), F('Offset', num(d.offset, 0)), F('Length', num(d.distance, 95)),
@@ -65,13 +75,17 @@
       const ride = rideHint(part, model);
       if (ride) S.push({ head: 'Rides on', hint: ride });
     } else if (part.kind === 'shape') {
+      const rotation = d.fixedRotation ? 'Fixed' : (num(d.spinSpeed, 0) ? 'Spins' : 'With the aim');
       S.push({ head: 'Part', fields: [F('Sides', num(d.sides, 0), 'num', 'Under 3 draws a circle.'), check('Drawn as a star', d.star), F('Size', num(d.size, 25)),
         F('Angle', degF(d.angle)), F('Offset X', num(d.xOffset, 0), 'num', 'Along the tank’s facing.'), F('Offset Y', num(d.yOffset, 0), 'num', 'Across the tank’s facing.'),
-        F('Spin speed', num(d.spinSpeed, 0), 'num', 'Rotation per tick, in world space. 0 holds the part at its angle; negative spins the other way. The preview does not animate.'),
+        F('Rotation', rotation, 'text', 'With the aim: turns with the tank. Fixed: keeps its angle in the world, like a dominator’s base. Spins: turns on its own, in world space.'),
+        rotation === 'Spins' ? F('Spin speed', num(d.spinSpeed, 0), 'num', 'Rotation per tick; negative spins the other way, 0 is Fixed. The preview does not animate.') : null,
         check('Same color as the body', d.color === 27), d.color === 27 ? null : colorRow('Color', d.color, 0),
-        check('Collidable (hitbox + body damage)', d.collidable), check('Visible while invisible', d.staysVisible)].filter(Boolean) });
+        T.rides(d) ? null : check('Collidable (hitbox + body damage)', d.collidable), check('Visible while invisible', d.staysVisible)].filter(Boolean) });
       const ride = rideHint(part, model);
       if (ride) S.push({ head: 'Rides on', hint: ride });
+      const riders = model.parts.filter(q => T.rides(q.data) && q.data.mountPart === part.index).map(q => q.name);
+      if (riders.length) S.push({ head: 'What rides on it', hint: riders.join(', ') + (num(d.spinSpeed, 0) ? '. The part spins, so they go round with it.' : '') });
     } else if (part.kind === 'turret') {
       S.push({ head: 'Auto turret', fields: [F('Offset X', num(d.xOffset, 0)), F('Offset Y', num(d.yOffset, 0)), F('Base size', num(d.baseSize, 25)),
         F('Facing', degF(d.angle), 'num', 'Where its arc is centred, and where it rests with nothing to shoot.'),
@@ -93,8 +107,37 @@
     }
     return S;
   }
+  /* The Bosses tab, as the editor shows a record: what wraps the tank when it spawns as a boss. */
+  function bossSections(boss) {
+    const ai = boss.ai || {}, sp = boss.spawn || {};
+    const radius = num(ai.aggressiveCrashRadius, 0);
+    const behaviour = radius <= 0 ? 'Ignore them (only turrets and drones fight)' : ai.wanderWhileFighting ? 'Wander and shoot at them'
+      : (num(ai.keepDistanceMin, 0) > 0 || num(ai.keepDistanceMax, 0) > 0) ? 'Keep distance and strafe' : num(ai.aggressiveCrashSpeed, 0.8) === 0 ? 'Stop and shoot' : 'Charge and ram';
+    const brain = ai.brain === 'bot' ? 'Bot (plays like a player)' : 'Simple (drifts, rams, shoots)';
+    return [
+      { head: 'Boss · ' + (boss.name || 'Boss'), hint: 'From the Bosses tab: the record that wraps this tank when it spawns as a boss. Console name: spawn_boss ' + String(boss.name || 'boss').toLowerCase().replace(/\s+/g, '') + '.', fields: [
+        F('Name', boss.name || 'Boss', 'text'), F('Spawn message', boss.spawnMessage || 'The default announcement', 'text'),
+        F('Size', num(boss.scale, 2), 'num', 'Scales the tank and everything on it. The stock bosses are 1.55 to 2.87; 4 is the most.'),
+        F('Health', num(boss.maxHealth, 3000), 'num', 'Does not grow with Size. The stock bosses have 3000; Decade 10000.'), F('Score for killing it', num(boss.xpBounty, 30000)),
+        F('Body damage on touch', num(boss.damageOnTouch, 10)), F('Knockback it takes', num(boss.knockbackMultiplier, 0.05)),
+        check('On the shapes’ team', boss.neutralTeam !== false, 'Bases leave it alone and it ignores the shapes. Off makes a Fallen-style enemy tank.'),
+        check('Players can take control (H)', boss.claimable !== false)] },
+      { head: 'Boss AI', fields: [F('Brain', brain, 'text'), ai.brain === 'bot' ? F('Skill', num(ai.botSkill, 0.7)) : null, ai.brain === 'bot' ? F('Backs off under', fmtN(num(ai.botRetreat, 0) * 100) + ' % health', 'text') : null,
+        F('When it spots a player', behaviour, 'text', 'Within Spot range. The simple brain fights what comes close and does not hunt across the map.'),
+        radius > 0 ? F('Spot range', radius, 'num', 'How close a player must come before it reacts. 2000 is the most.') : null,
+        behaviour === 'Charge and ram' ? F('Charge speed', num(ai.aggressiveCrashSpeed, 0.8)) : null,
+        behaviour === 'Keep distance and strafe' ? F('Keep distance', fmtN(num(ai.keepDistanceMin, 0)) + ' to ' + fmtN(num(ai.keepDistanceMax, 0)), 'text') : null,
+        F('When no one is near', ai.hoverAroundCenter ? 'Circle the map centre' : 'Wander around', 'text'), F('Drift speed', num(ai.floatSpeed, 0.5)),
+        F('Ignores players below level', num(ai.minTargetLevel, 15)), check('Leads its shots', ai.leadShots !== false), check('Faces where it drifts', ai.looksForward)].filter(Boolean) },
+      { head: 'Spawning', fields: [F('Spawn ring', fmtN(num(sp.from, 0)) + ' to ' + fmtN(num(sp.to, 0.4)) + ' of the way to the edge', 'text', '0 is the map centre, 1 the edge: the same bands as custom shapes.'),
+        F('How often', num(sp.weight, 1), 'num', 'Its weight in the lobby’s boss rotation. 0 keeps it out: only spawn_boss brings it.')] }];
+  }
   function rideHint(part, model) {
     const d = part.data;
+    if (T.rides(d)) {
+      const s = model.parts.find(p => p.kind === 'shape' && p.index === d.mountPart);
+      return `Rides on ${s ? s.name : 'part ' + (d.mountPart + 1)}: Offset X, Offset Y and Angle are from that part’s centre, along its angle. When the part spins, this goes round with it.` + (part.kind === 'barrel' ? ' It still fires.' : ' Looks only: a riding part has no hitbox.');
+    }
     if (d.mountTurret !== undefined) {
       const t = model.parts.find(p => p.kind === 'turret' && p.index === d.mountTurret);
       return `Rides on ${t ? t.name : 'auto turret ' + (d.mountTurret + 1)}: angle, gap and offset are from the turret’s centre, the way a barrel sits on the body.` + (part.kind === 'barrel' ? ' It fires when the turret does.' : '');
@@ -107,10 +150,10 @@
   }
 
   // ---- DOM for the inspector ----------------------------------------------------------
-  function renderInspector(box, part, model, tank) {
+  function renderInspector(box, part, model, tank, boss) {
     box.innerHTML = '';
     if (!part) { box.appendChild(h('div', 'te-hint', 'Click a layer to edit it.')); return; }
-    for (const sec of fieldsFor(part, model, tank)) {
+    for (const sec of fieldsFor(part, model, tank, boss)) {
       const s = h('div', 'te-section');
       s.appendChild(h('div', 'te-section-head', sec.head));
       if (sec.hint) s.appendChild(h('div', 'te-hint', sec.hint));
@@ -121,7 +164,7 @@
           if (f.tip) row.title = f.tip; s.appendChild(row); continue;
         }
         const row = h('div', 'te-field'); row.appendChild(h('span', null, f.label));
-        if (f.kind === 'color') { const v = h('div', 'te-value te-color'); const sw = h('i', 'te-swatch'); sw.style.background = T.PALETTE[f.idx] || '#999'; v.appendChild(sw); v.appendChild(h('b', null, f.value)); row.appendChild(v); }
+        if (f.kind === 'color') { const v = h('div', 'te-value te-color'); const sw = h('i', 'te-swatch'); sw.style.background = T.fillOf(f.idx, 0, model.team); sw.style.opacity = T.alphaOf(f.idx); v.appendChild(sw); v.appendChild(h('b', null, f.value)); row.appendChild(v); }
         else row.appendChild(h('div', 'te-value', String(f.value)));
         if (f.tip) row.title = f.tip;
         s.appendChild(row);
@@ -135,7 +178,7 @@
   function renderLayers(box, model, visible, focus, onPick, subjectName) {
     box.innerHTML = '';
     const parts = model.parts.filter(p => visible.has(p.name));
-    const carriedBy = p => p.data.mountTurret !== undefined ? ['turret', p.data.mountTurret] : p.data.mount !== undefined ? ['barrel', p.data.mount] : null;
+    const carriedBy = p => p.data.mountTurret !== undefined ? ['turret', p.data.mountTurret] : p.data.mount !== undefined ? ['barrel', p.data.mount] : T.rides(p.data) ? ['shape', p.data.mountPart] : null;
     const top = parts.filter(p => !carriedBy(p));
     const isAbove = p => p.kind === 'turret' ? (p.data.aboveBody === undefined || p.data.aboveBody) : p.kind === 'barrel' ? !!(p.data.flags && p.data.flags.aboveBody) : !!p.data.aboveBody;
     const order = p => [num(p.data.order, 0), { barrel: 0, shape: 1, turret: 2 }[p.kind], p.index];
@@ -148,20 +191,22 @@
       n.appendChild(h('span', 'te-layer-name', p.name));
       if (p.kind === 'barrel' && p.data.invisible) n.appendChild(h('small', 'te-tag', 'invisible'));
       if (p.kind === 'barrel' && !(p.data.bulletType && p.data.bulletType !== 'none')) n.appendChild(h('small', 'te-tag', 'looks only'));
+      if (p.kind === 'shape' && p.data.fixedRotation) n.appendChild(h('small', 'te-tag', 'fixed'));
+      if (p.kind === 'shape' && T.isHex(p.data.color) && T.alphaOf(p.data.color) < 0.999) n.appendChild(h('small', 'te-tag', Math.round(T.alphaOf(p.data.color) * 100) + ' %'));
       n.addEventListener('click', () => onPick(p));
       r.appendChild(n);
       return r;
     };
-    const addWithRiders = (p, container) => {
-      container.appendChild(row(p, false));
+    const addWithRiders = (p, container, depth) => {   // riders nest under their carrier; a part chain nests four deep at most
+      container.appendChild(row(p, depth > 0));
       const riders = parts.filter(q => { const c = carriedBy(q); return c && c[0] === p.kind && c[1] === p.index; }).sort(cmp);
-      for (const q of riders) container.appendChild(row(q, true));
+      for (const q of riders) if (depth < 5) addWithRiders(q, container, depth + 1);
     };
     const over = top.filter(isAbove).sort(cmp), under = top.filter(p => !isAbove(p)).sort(cmp);
     const sec = (label) => { const e = h('div', 'te-layer-sec', label); box.appendChild(e); };
     sec('Over body');
     if (!over.length) box.appendChild(h('div', 'te-layer-empty', 'nothing yet'));
-    for (const p of over) addWithRiders(p, box);
+    for (const p of over) addWithRiders(p, box, 0);
     const body = h('div', 'te-layer-row te-body-row' + (focus === 'Tank body' ? ' sel' : ''));
     const bn = h('button', 'te-node'); bn.appendChild(h('i', 'te-glyph body', GLYPH.body));
     const bsw = h('i', 'te-swatch'); bsw.style.background = model.team; bn.appendChild(bsw);
@@ -170,7 +215,7 @@
     body.appendChild(bn); box.appendChild(body);
     sec('Under body');
     if (!under.length) box.appendChild(h('div', 'te-layer-empty', 'nothing yet'));
-    for (const p of under) addWithRiders(p, box);
+    for (const p of under) addWithRiders(p, box, 0);
   }
   function swatchOf(p, model) {
     const d = p.data;
@@ -192,7 +237,7 @@
     const c = this.c; c.classList.add('te');
     const head = h('div', 'te-head');
     head.appendChild(h('span', 'te-title', 'TANK EDITOR'));
-    head.appendChild(h('span', 'te-crumb', (this.cfg.packName || 'Lesson pack') + ' › ' + this.tank.name));
+    head.appendChild(h('span', 'te-crumb', (this.cfg.packName || 'Lesson pack') + ' › ' + (this.cfg.label ? this.cfg.label + ' ' : '') + this.tank.name + (this.cfg.boss ? ' · boss' : '')));
     const tools = h('span', 'te-tools');
     this.fitBtn = h('button', 'te-tool', 'Fit'); this.fitBtn.addEventListener('click', () => this.live && this.live.fit && this.fit());
     this.playBtn = h('button', 'te-tool te-play', 'Play');
@@ -286,7 +331,7 @@
     else if (this.focus) part = this.model.byName[this.focus] || null;
     if (part && part.kind === 'body' && this.subject !== 'tank') part = { kind: 'projectile', data: this.proj, name: this.proj.name };
     this.inspHead.textContent = part ? ({ body: 'Tank', barrel: 'Barrel', shape: 'Part', turret: 'Auto turret', projectile: 'Projectile' }[part.kind] + ' · ' + part.name) : 'Inspector';
-    renderInspector(this.insp, part, this.model, this.tank);
+    renderInspector(this.insp, part, this.model, this.tank, this.cfg.boss);
   };
   Scene.prototype._selectionBox = function () {
     const p = this.focus === 'Tank body' ? this.model.hull : (this.focus ? this.model.byName[this.focus] : null);

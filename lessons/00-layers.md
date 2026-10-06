@@ -16,7 +16,7 @@ There are three kinds of layer, and that is all there is:
 | Layer | What it is | Fields that place it |
 |---|---|---|
 | **Barrel** | A rectangle or trapezoid that can fire. The only straight-edged shape you get. | Angle, Offset, Length, Width at base, Width at tip, Gap |
-| **Part** | A regular polygon, a circle (**Sides** under 3) or a star. | Sides, Size, Angle, Offset X, Offset Y |
+| **Part** | A regular polygon, a circle (**Sides** under 3) or a star. | Sides, Size, Angle, Offset X, Offset Y, Rotation |
 | **Auto turret** | A disc that turns on its own, and carries barrels and parts with it. | Offset X, Offset Y, Base size, Facing, Range, Arc |
 
 ```scene
@@ -36,11 +36,13 @@ There are three kinds of layer, and that is all there is:
 - A part's **Size** is centre to corner. A polygon **body** draws at 1.3 × its Body size (an octagon body of 44 looks like a circle of 50).
 - **Angle** and **Facing** are degrees, clockwise, 0 pointing where the tank aims. **Offset X** runs along the aim, **Offset Y** across it to the tank's right.
 - Everything gets a dark outline about 7.5 units wide, 72 % of its fill colour. A part under about 8 units across shows only its outline.
-- **Spin speed** is rotation per tick, 25 ticks a second: 0.0628 is one turn every four seconds, and the slider stops at ±0.5.
+- A part's **Rotation** is one of **With the aim**, **Fixed** (keeps its angle in the world, lesson 20) or **Spins**. **Spin speed** is rotation per tick, 25 ticks a second: 0.0628 is one turn every four seconds, and the slider stops at ±0.5.
+- A part or a barrel can also **ride** an auto turret, a barrel or, since October 2026, another part (lesson 19). Its offsets are then measured from what it rides.
 
 ## Gotchas
 
 - The editor keeps **32 parts, 32 barrels and 8 auto turrets** per tank and drops the rest without a word. Everything a tank's projectiles carry counts too, up to 96 pieces in all (lesson 15).
 - Name every layer (double-click it). The names in these lessons are what you will see in the real editor after importing the pack.
 - **Fit** zooms the canvas to the whole tank. Holding **Shift** while dragging snaps to 10 units and 15°.
-- Parts default to Border grey, barrels to Cannon grey. Every lesson says which colour it uses by the editor's swatch names.
+- Parts default to Border grey, barrels to Cannon grey. Every lesson says which colour it uses by the editor's swatch names; since October 2026 any colour box also takes a hex code with an opacity (lesson 21).
+- Only the body and parts marked **Collidable** have a hitbox, up to eight of them per tank since October 2026 (lesson 12). Everything else is picture.

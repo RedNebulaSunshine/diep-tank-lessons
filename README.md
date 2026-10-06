@@ -27,6 +27,10 @@ pick apart in the real editor. Written for players who found the Halloween pack 
 | 16 | A missile that steers itself |
 | 17 | A missile that bursts |
 | 18 | A salvo that fans out |
+| 19 | A part that rides a part |
+| 20 | A part that keeps its heading |
+| 21 | Your own colours |
+| 22 | A boss of your own |
 
 ## How it is built
 
@@ -54,8 +58,10 @@ The pages need no server: open `docs/index.html` from disk and everything works.
 ## Corrections
 
 If a field name, a number or a claim about the game is wrong, open an issue. The lessons
-describe the editor as it was in early October 2026; the editor is a work in progress and
-its labels can change.
+describe the editor as of its update of 6 October 2026 (custom bosses, custom colours, parts
+riding parts, fixed rotation, eight hitboxes); the editor is a work in progress and its labels
+can change. The game's menu now has a rules page (what gets a ban, which scripts are allowed);
+read it before hosting packs for other people.
 
 ## Licence and credits
 

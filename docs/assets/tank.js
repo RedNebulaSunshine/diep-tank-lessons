@@ -3,17 +3,19 @@
    splitting over from under, outlines at 72 % of the fill, polygon hulls at 1.3 x, stars at
    0.4 inner radius) plus a small "live" simulation of the moving tricks the lessons teach:
    spinning parts, turrets that watch, follow the cursor or swing back, barrels that pump and
-   fire, stationary shots that trail, recoil dashes and fading. It is a sketch of the game, not
-   the game: speeds and timings are approximate. MIT, Sunshine. */
+   fire, stationary shots that trail, recoil dashes and fading, parts that ride spinning parts and
+   parts that keep their heading. Colours are palette indices or, since the editor update of
+   6 October 2026, hex strings with optional opacity. It is a sketch of the game, not the game:
+   speeds and timings are approximate. MIT, Sunshine. */
 (function (global) {
   'use strict';
 
   const PALETTE = ['#555555', '#999999', '#00B2E1', '#999999', '#F14E54', '#BF7FF5', '#00E16E', '#8AFF69',
     '#FFE869', '#FC7677', '#768DFC', '#F177DD', '#999999', '#43FF91', '#BBBBBB', '#999999',
-    '#FCC376', '#999999', '#35C5DB', '#FFFFFF', '#3D3D3D', '#12A5A5', '#4A57C8', '#A9724A',
+    '#FCC376', '#C0C0C0', '#35C5DB', '#FFFFFF', '#3D3D3D', '#12A5A5', '#4A57C8', '#A9724A',
     '#B5323A', '#2E9E5B', '#7B4FA8', '#00B2E1', '#999999', '#999999'];
   const COLOR_NAMES = { 0: 'Border (grey)', 1: 'Cannon', 2: 'Blue', 4: 'Red', 5: 'Purple', 6: 'Green', 7: 'Shiny',
-    8: 'Yellow', 9: 'Salmon', 10: 'Periwinkle', 11: 'Pink', 13: 'Mint', 14: 'Box', 16: 'Orange', 18: 'Cyan',
+    8: 'Yellow', 9: 'Salmon', 10: 'Periwinkle', 11: 'Pink', 13: 'Mint', 14: 'Box', 16: 'Orange', 17: 'Fallen', 18: 'Cyan',
     19: 'White', 20: 'Charcoal', 21: 'Teal', 22: 'Indigo', 23: 'Brown', 24: 'Crimson', 25: 'Forest', 26: 'Plum',
     27: 'Same color as the body' };
   const TEAM_HEX = '#00B2E1';     // the owner's blue
@@ -30,12 +32,19 @@
   const num = (v, d) => (v === undefined || v === null || Number.isNaN(+v)) ? d : +v;
   const hi = v => Array.isArray(v) ? Math.max(...v) : v;   // a [min, max] roll counts its max
 
+  const HEX_RE = /^#[0-9a-f]{6}([0-9a-f]{2})?$/i;
+  const isHex = c => typeof c === 'string' && HEX_RE.test(c);      // the editor's Custom color: #rrggbb or #rrggbbaa
   function fillOf(idx, dflt, team) {
     if (idx === undefined || idx === null) idx = dflt;
+    if (isHex(idx)) return idx.slice(0, 7);
     if (idx === 27) return team || TEAM_HEX;
     if (!(idx >= 0 && idx < PALETTE.length)) idx = dflt;
     return PALETTE[idx];
   }
+  /* Opacity of a colour value: the aa pair of a hex string, else 1. The game draws the part translucent. */
+  function alphaOf(idx) { return (isHex(idx) && idx.length === 9) ? parseInt(idx.slice(7, 9), 16) / 255 : 1; }
+  /* A part or barrel that rides a body shape (mountPart). mount wins, then mountTurret, then this. */
+  const rides = d => d.mountPart !== undefined && d.mountPart !== null && d.mountPart >= 0 && d.mount === undefined && d.mountTurret === undefined;
   function strokeOf(hex) {
     const n = parseInt(hex.slice(1), 16);
     const f = v => Math.round(v * 0.72).toString(16).padStart(2, '0');
@@ -62,8 +71,10 @@
     if (parent) parent.appendChild(e);
     return e;
   }
-  function filled(tag, attrs, hex, parent) {
-    return el(tag, Object.assign({ fill: hex, stroke: strokeOf(hex), 'stroke-width': STROKE, 'stroke-linejoin': 'round' }, attrs), parent);
+  function filled(tag, attrs, hex, parent, alpha) {
+    const a = Object.assign({ fill: hex, stroke: strokeOf(hex), 'stroke-width': STROKE, 'stroke-linejoin': 'round' }, attrs);
+    if (alpha !== undefined && alpha < 0.999) { a['fill-opacity'] = fmt(alpha); a['stroke-opacity'] = fmt(alpha); }
+    return el(tag, a, parent);
   }
   function partName(kind, i, data) {
     return (data.editor && data.editor.name) || ({ barrel: 'Barrel', shape: 'Part', turret: 'Auto turret' }[kind] + ' ' + (i + 1));
@@ -72,15 +83,18 @@
   // ---- building the SVG ----------------------------------------------------------------
   /* Returns {root, parts, byName, hull, team}. parts: [{kind, index, name, data, el, ...}].
      Element layout (all in the tank frame: x forward, y to the tank's right):
-       shape : g.part.shape[translate] > g.rot[rotate] > polygon|circle
+       shape : g.part.shape[translate] > g.rot[rotate] > (g.riders under | polygon|circle | g.riders above)
        barrel: g.part.barrel[rotate]   > g.pump[translate] > (g.mid under | polygon | g.mid above)
        turret: g.part.turret[translate]> g.rot[rotate]     > (under | circle | above)
-     under/above = parts mounted on it, in their own g.part groups. */
+     under/above = parts mounted on it, in their own g.part groups. A part that rides a part
+     (mountPart) sits inside the carrier's g.rot, so it turns and orbits with it. */
   function build(tank, opts) {
     opts = opts || {};
     const barrels = tank.barrels || [], shapes = tank.bodyShapes || [], turrets = tank.turrets || [];
     const body = tank.body || {};
-    const team = opts.team || ((body.color !== undefined && body.color !== null && body.color !== 27) ? fillOf(body.color, 2) : TEAM_HEX);
+    // "Same color as the body" (27) takes the hull's palette colour; on a hull painted with a hex Custom
+    // color it shows the TEAM colour (seen in play, 6 October 2026), so the team stays player blue there.
+    const team = opts.team || ((body.color !== undefined && body.color !== null && body.color !== 27 && !isHex(body.color)) ? fillOf(body.color, 2) : TEAM_HEX);
     const parts = [], byName = {};
     const root = el('g', { class: 'tank' });
     const gUnder = el('g', { class: 'under' }, root), gHull = el('g', { class: 'hull' }, root), gAbove = el('g', { class: 'above' }, root);
@@ -93,24 +107,28 @@
     }
     function shapeEl(s, i) {
       const size = num(s.size, 25), sides = s.sides | 0;
-      const fill = fillOf(s.color, 0, team);
+      const fill = fillOf(s.color, 0, team), alpha = alphaOf(s.color);
       const g = el('g', { class: 'part shape', transform: `translate(${fmt(num(s.xOffset, 0))} ${fmt(num(s.yOffset, 0))})` });
       const r = el('g', { class: 'rot', transform: `rotate(${fmt(deg(num(s.angle, 0)))})` }, g);
-      if (sides <= 2) filled('circle', { r: size }, fill, r);
-      else filled('polygon', { points: fmtPts(polyPoints(sides, size, !!s.star)) }, fill, r);
+      const ridersUnder = el('g', { class: 'riders' }, r);
+      if (sides <= 2) filled('circle', { r: size }, fill, r, alpha);
+      else filled('polygon', { points: fmtPts(polyPoints(sides, size, !!s.star)) }, fill, r, alpha);
+      const ridersAbove = el('g', { class: 'riders' }, r);
       const p = reg('shape', i, s, g);
-      p.rotEl = r; p.baseAngle = num(s.angle, 0); p.spin = num(s.spinSpeed, 0);
+      p.rotEl = r; p.baseAngle = num(s.angle, 0); p.spin = s.fixedRotation ? 0 : num(s.spinSpeed, 0); p.fixed = !!s.fixedRotation;
+      p.ridersUnder = ridersUnder; p.ridersAbove = ridersAbove;
       if (s.staysVisible) g.classList.add('stays-visible');
+      if (p.fixed) g.classList.add('fixed');
       return p;
     }
     function barrelEl(b, i) {
       const x0 = num(b.startDistance, 0), x1 = x0 + Math.min(num(b.distance, 95), 500), off = num(b.offset, 0);
       const hw0 = 21 * num(b.heightMultiplier, 1), hw1 = hw0 * num(b.muzzleScale, 1);
-      const fill = fillOf(b.color, 1, team);
+      const fill = fillOf(b.color, 1, team), alpha = alphaOf(b.color);
       const g = el('g', { class: 'part barrel', transform: `rotate(${fmt(deg(num(b.angle, 0)))})` });
       const pump = el('g', { class: 'pump' }, g);
       const midU = el('g', { class: 'mid', transform: `translate(${fmt((x0 + x1) / 2)} ${fmt(off)})` }, pump);
-      const poly = filled('polygon', { points: fmtPts([[x0, off + hw0], [x1, off + hw1], [x1, off - hw1], [x0, off - hw0]]) }, fill, pump);
+      const poly = filled('polygon', { points: fmtPts([[x0, off + hw0], [x1, off + hw1], [x1, off - hw1], [x0, off - hw0]]) }, fill, pump, alpha);
       const midA = el('g', { class: 'mid', transform: `translate(${fmt((x0 + x1) / 2)} ${fmt(off)})` }, pump);
       const p = reg('barrel', i, b, g);
       Object.assign(p, { pumpEl: pump, midUnder: midU, midAbove: midA, poly, muzzle: [x1, off], base: [x0, off], angle: num(b.angle, 0), length: x1 - x0 });
@@ -123,7 +141,12 @@
         .filter(Boolean);
       return items.sort((a, b) => a.o - b.o || a.k - b.k || a.j - b.j);
     };
-    const seen = new Set();
+    // what rides body shape i (mountPart): drawn inside its rotating frame, under it unless aboveBody
+    const ridersOf = i => barrels.map((b, j) => rides(b) && b.mountPart === i ? { o: num(b.order, 0), k: 0, j, kind: 'barrel', above: !!(b.flags && b.flags.aboveBody) } : null)
+      .concat(shapes.map((s, j) => rides(s) && s.mountPart === i ? { o: num(s.order, 0), k: 1, j, kind: 'shape', above: !!s.aboveBody } : null))
+      .filter(Boolean).sort((a, b) => a.o - b.o || a.k - b.k || a.j - b.j);
+    const seen = new Set(), seenShapes = new Set();
+    const shapeParts = [];
     function emitBarrel(i, container) {
       if (seen.has(i)) return; seen.add(i);
       const p = barrelEl(barrels[i], i);
@@ -133,7 +156,16 @@
       container.appendChild(p.el);
       return p;
     }
-    function emitShape(i, container) { const p = shapeEl(shapes[i], i); container.appendChild(p.el); return p; }
+    function emitShape(i, container) {
+      if (seenShapes.has(i)) return; seenShapes.add(i);   // a chain cannot loop (the editor clears a cycle)
+      const p = shapeEl(shapes[i], i);
+      shapeParts[i] = p;
+      const riders = ridersOf(i);
+      for (const m of riders) if (!m.above) (m.kind === 'barrel' ? emitBarrel(m.j, p.ridersUnder) : emitShape(m.j, p.ridersUnder));
+      for (const m of riders) if (m.above) (m.kind === 'barrel' ? emitBarrel(m.j, p.ridersAbove) : emitShape(m.j, p.ridersAbove));
+      container.appendChild(p.el);
+      return p;
+    }
     function emitTurret(i, container) {
       const t = turrets[i];
       const g = el('g', { class: 'part turret', transform: `translate(${fmt(num(t.xOffset, 0))} ${fmt(num(t.yOffset, 0))})` });
@@ -152,8 +184,8 @@
     }
     // 1. parts under the body, in `order` (ties: barrels, shapes, turrets, then array order)
     const under = [], above = [];
-    barrels.forEach((b, i) => { if (b.mountTurret === undefined && b.mount === undefined) (b.flags && b.flags.aboveBody ? above : under).push({ o: num(b.order, 0), k: 0, i, kind: 'barrel' }); });
-    shapes.forEach((s, i) => { if (s.mountTurret === undefined && s.mount === undefined) (s.aboveBody ? above : under).push({ o: num(s.order, 0), k: 1, i, kind: 'shape' }); });
+    barrels.forEach((b, i) => { if (b.mountTurret === undefined && b.mount === undefined && !rides(b)) (b.flags && b.flags.aboveBody ? above : under).push({ o: num(b.order, 0), k: 0, i, kind: 'barrel' }); });
+    shapes.forEach((s, i) => { if (s.mountTurret === undefined && s.mount === undefined && !rides(s)) (s.aboveBody ? above : under).push({ o: num(s.order, 0), k: 1, i, kind: 'shape' }); });
     turrets.forEach((t, i) => { ((t.aboveBody === undefined || t.aboveBody) ? above : under).push({ o: num(t.order, 0), k: 2, i, kind: 'turret' }); });
     const cmp = (a, b) => a.o - b.o || a.k - b.k || a.i - b.i;
     under.sort(cmp); above.sort(cmp);
@@ -161,15 +193,25 @@
     for (const it of under) emit(it, gUnder);
     // 2. the body
     const sides = body.sides | 0, size = num(body.size, HULL_R);
-    const hullFill = fillOf(body.color, 2, team);
+    const hullFill = fillOf(body.color, 2, team), hullAlpha = alphaOf(body.color);
     const hullRot = el('g', { class: 'rot', transform: `rotate(${fmt(deg(num(body.angle, 0)))})` }, gHull);
-    if (sides <= 2) filled('circle', { r: size }, hullFill, hullRot);
-    else filled('polygon', { points: fmtPts(polyPoints(sides, size * POLY_HULL, !!body.star)) }, hullFill, hullRot);
+    if (sides <= 2) filled('circle', { r: size }, hullFill, hullRot, hullAlpha);
+    else filled('polygon', { points: fmtPts(polyPoints(sides, size * POLY_HULL, !!body.star)) }, hullFill, hullRot, hullAlpha);
     const hull = { kind: 'body', name: 'Tank body', data: body, el: gHull, rotEl: hullRot, baseAngle: num(body.angle, 0), spin: num(body.spinSpeed, 0), size };
     gHull.setAttribute('data-name', 'Tank body'); gHull.setAttribute('data-kind', 'body');
     // 3. parts over the body
     for (const it of above) emit(it, gAbove);
-    return { root, parts, byName, hull, team, tank };
+    /* Where a body shape's frame sits in the tank frame right now, through every carrier it rides:
+       {pos, ang}. Used to fire a barrel that rides a (spinning) part from the right place. */
+    function frameOf(p) {
+      let pos = [num(p.data.xOffset, 0), num(p.data.yOffset, 0)], ang = p.curAngle === undefined ? p.baseAngle : p.curAngle;
+      if (rides(p.data) && shapeParts[p.data.mountPart]) {
+        const f = frameOf(shapeParts[p.data.mountPart]);
+        const r = rot(pos, f.ang); pos = [f.pos[0] + r[0], f.pos[1] + r[1]]; ang += f.ang;
+      }
+      return { pos, ang };
+    }
+    return { root, parts, byName, hull, team, tank, shapeParts, frameOf };
   }
 
   /* A projectile drawn like the editor's "What a barrel fires" view: its disc as a hull of radius 50. */
@@ -217,7 +259,8 @@
     this.tankG.appendChild(this.model.root);
     this.overlay = el('g', { class: 'overlay' }, svg);
     this.turrets = this.model.parts.filter(p => p.kind === 'turret');
-    this.spinners = this.model.parts.filter(p => p.kind === 'shape' && p.spin).concat(this.model.hull.spin ? [this.model.hull] : []);
+    this.spinners = this.model.parts.filter(p => p.kind === 'shape' && p.spin && !p.fixed).concat(this.model.hull.spin ? [this.model.hull] : []);
+    this.fixed = this.model.parts.filter(p => p.kind === 'shape' && p.fixed);   // keep their angle in the world
     this.guns = this.model.parts.filter(p => p.kind === 'barrel' && p.data.bulletType && p.data.bulletType !== 'none'
       && (Array.isArray(p.data.projectile) || num(p.data.projectile, -1) >= 0));
     for (const g of this.guns) { g.next = null; g.pumpT = -9; }
@@ -259,6 +302,7 @@
       this.heading = -Math.PI / 2; this.pos = [0, 0]; this.vel = [0, 0]; this.alpha = 1;
       for (const t of this.turrets) { t.heading = this.heading + t.rest; t.vel = 0; t.rotEl.setAttribute('transform', `rotate(${fmt(deg(t.rest))})`); }
       for (const g of this.guns) { g.pumpEl.setAttribute('transform', ''); g.next = null; }
+      for (const p of this.fixed) { p.curAngle = p.baseAngle; p.rotEl.setAttribute('transform', `rotate(${fmt(deg(p.baseAngle))})`); }
       for (const s of this.shots) s.el.remove();
       this.shots = [];
       this._place();
@@ -381,7 +425,9 @@
     this._place();
   };
   Live.prototype._spin = function (dt) {
-    for (const s of this.spinners) { s.baseAngle += s.spin * TICKS * dt; s.rotEl.setAttribute('transform', `rotate(${fmt(deg(s.baseAngle))})`); }
+    for (const s of this.spinners) { s.baseAngle += s.spin * TICKS * dt; s.curAngle = s.baseAngle; s.rotEl.setAttribute('transform', `rotate(${fmt(deg(s.baseAngle))})`); }
+    // a fixed-rotation part holds its world angle: counter-rotate it by however far the tank has turned from spawn
+    for (const p of this.fixed) { p.curAngle = p.baseAngle + (-Math.PI / 2 - this.heading); p.rotEl.setAttribute('transform', `rotate(${fmt(deg(p.curAngle))})`); }
   };
   Live.prototype._fire = function (g) {
     const b = g.data, tank = this.tank;
@@ -391,8 +437,13 @@
     // where the muzzle is, through whatever the barrel rides on
     let m = g.muzzle, angle = g.angle;
     const t = b.mountTurret !== undefined ? this.turrets.find(x => x.index === b.mountTurret) : null;
+    const carrier = rides(b) ? this.model.shapeParts[b.mountPart] : null;
     let world, dirA;
     if (t) { const local = rot(m, t.heading - this.heading); world = this.local2world([num(t.data.xOffset, 0) + local[0], num(t.data.yOffset, 0) + local[1]]); dirA = t.heading + angle; }
+    else if (carrier) {   // a barrel riding a part fires from wherever the part has turned to
+      const f = this.model.frameOf(carrier), local = rot(m, f.ang);
+      world = this.local2world([f.pos[0] + local[0], f.pos[1] + local[1]]); dirA = this.heading + f.ang + angle;
+    }
     else { world = this.local2world(rot(m, 0)); dirA = this.heading + angle; }
     const n = clamp(num(b.numBullets, 1), 1, 10);
     for (let k = 0; k < n; k++) {
@@ -484,5 +535,5 @@
     }
   };
 
-  global.DiepTank = { PALETTE, COLOR_NAMES, TEAM_HEX, build, projectileAsTank, bbox, Live, deg, rad, fillOf, strokeOf, polyPoints, el, filled, fmt, fmtPts, num, partName };
+  global.DiepTank = { PALETTE, COLOR_NAMES, TEAM_HEX, build, projectileAsTank, bbox, Live, deg, rad, fillOf, alphaOf, isHex, rides, strokeOf, polyPoints, el, filled, fmt, fmtPts, num, partName };
 })(window);

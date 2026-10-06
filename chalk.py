@@ -125,22 +125,40 @@ class Figure:
             fill = "none" if dashed else (HULL_FILL if b.get("color") == 27 and self.team else PART_FILL)
             out.append(self._poly(ps, fill, dashed))
 
+        def rides(d):
+            """A part or barrel riding a body shape (mountPart; mount and mountTurret win over it)."""
+            return d.get("mountPart", -1) >= 0 and "mount" not in d and "mountTurret" not in d
+
         def shape(s, i, origin=(0, 0), ang=0.0):
             c = add(origin, rot((s.get("xOffset", 0), s.get("yOffset", 0)), ang))
             n = name(s, "shape", i)
             size, sides = s.get("size", 25), s.get("sides", 0)
             fill = HULL_FILL if s.get("color") == 27 and self.team else PART_FILL
-            if s.get("color") == 19:
+            col = s.get("color")
+            if col == 19 or (isinstance(col, str) and col[:7].lower() == "#ffffff"):
                 fill = "#7d9488"
+            a = s.get("angle", 0)
+            if s.get("fixedRotation"):
+                a -= self.h + math.pi / 2          # a fixed part keeps its world angle, whatever the figure's heading
+            own = ang + a
+            riders = [(j, "b") for j, m in enumerate(bars) if rides(m) and m["mountPart"] == i]
+            riders += [(j, "s") for j, r in enumerate(shapes) if rides(r) and r["mountPart"] == i]
+            above = lambda j, k: (bars[j].get("flags") or {}).get("aboveBody") if k == "b" else shapes[j].get("aboveBody")
+            for j, k in riders:                    # riders draw under their carrier unless aboveBody
+                if not above(j, k):
+                    barrel(j, c, own) if k == "b" else shape(shapes[j], j, c, own)
             if sides <= 2:
                 self.geo[n] = ("circle", c, size)
                 if n not in self.hide:
                     out.append(self._circle(c, size, fill, n in self.ghost))
             else:
-                ps = [add(c, rot(p, ang + s.get("angle", 0))) for p in poly(sides, size, s.get("star"))]
+                ps = [add(c, rot(p, own)) for p in poly(sides, size, s.get("star"))]
                 self.geo[n] = ("poly", ps)
                 if n not in self.hide:
                     out.append(self._poly(ps, fill, n in self.ghost))
+            for j, k in riders:
+                if above(j, k):
+                    barrel(j, c, own) if k == "b" else shape(shapes[j], j, c, own)
 
         def turret(u, i):
             o, a = (u.get("xOffset", 0), u.get("yOffset", 0)), u.get("angle", 0)
@@ -163,10 +181,10 @@ class Figure:
 
         under, over = [], []
         for i, b in enumerate(bars):
-            if "mountTurret" not in b and "mount" not in b:
+            if "mountTurret" not in b and "mount" not in b and not rides(b):
                 ((over if (b.get("flags") or {}).get("aboveBody") else under)).append((b.get("order", 0), 0, i, "b"))
         for i, s in enumerate(shapes):
-            if "mountTurret" not in s and "mount" not in s:
+            if "mountTurret" not in s and "mount" not in s and not rides(s):
                 (over if s.get("aboveBody") else under).append((s.get("order", 0), 1, i, "s"))
         for i, u in enumerate(turs):
             (over if u.get("aboveBody", True) else under).append((u.get("order", 0), 2, i, "t"))
@@ -608,8 +626,59 @@ def d18():
     return b
 
 
+def d19():
+    b = Board("19-rider", 600, 440, "Moons ride a spinning planet and go round it; guns ride a spinning plate and fire")
+    g = b.fig(load("lesson-19-rider"), at=(300, 150), scale=1.0)
+    planet = g.anchor("planet")
+    b.arc(planet, 60, 200, 340)
+    b.arc(planet, 60, 20, 160)
+    b.label((110, 300), "moons: Rides on\nplanet; the planet\nspins, they orbit", g.anchor("moon 2"), bend=0.15)
+    b.label((490, 320), "ring guns: ride the\nplate, turn with it,\nstill fire", g.anchor("ring gun 2", "tip"), bend=-0.15)
+    b.label((440, 60), "plate: Rotation Spins", g.anchor("plate", "rim"), bend=-0.15)
+    b.text((300, 415), "spin the carrier and everything riding it goes round", size=28, color=CHALK)
+    return b
+
+
+def d20():
+    b = Board("20-fixed", 600, 420, "The tank turns 50 degrees; the fixed base and the compass needle keep their heading")
+    g1 = b.fig(load("lesson-20-fixed"), at=(165, 200), scale=1.1, heading=-90)
+    g2 = b.fig(load("lesson-20-fixed"), at=(445, 200), scale=1.1, heading=-40)
+    b.arrow((265, 200), (335, 200), bend=0)
+    b.text((300, 165), "turn", size=30)
+    b.label((110, 50), "base: Rotation Fixed", g1.anchor("base (fixed)", "rim"), bend=0.1)
+    b.label((480, 50), "the cannon turned...", g2.anchor("cannon", "tip"), bend=-0.1)
+    b.label((455, 385), "...the base and needle\ndid not", g2.anchor("needle (fixed)"), bend=-0.1)
+    return b
+
+
+def d21():
+    b = Board("21-colours", 600, 420, "A body in an exact hex colour; its Same-color badge still shows the team; a see-through fin")
+    g = b.fig(load("lesson-21-colours"), at=(300, 200), scale=1.5)
+    b.label((115, 70), "body: Custom color\n#e67828", g.anchor("body", "rim"), bend=0.15)
+    b.label((470, 80), "badge: Same color as\nthe body = the TEAM\ncolour, not orange", g.anchor("badge (same color as the body)"), bend=-0.15)
+    b.label((480, 350), "fin: Opacity 40 %,\nsee-through", g.anchor("fin (40 % opacity)"), bend=-0.15)
+    b.label((110, 330), "studs: Fallen,\nthe new swatch", g.anchor("stud (Fallen)"), bend=0.15)
+    return b
+
+
+def d22():
+    b = Board("22-boss", 600, 460, "A boss record wraps the tank: the same tank at Size 2.5, with its own health, brain and spawn rule")
+    small = b.fig(load("lesson-22-boss"), at=(110, 130), scale=0.45)
+    big = b.fig(load("lesson-22-boss"), at=(380, 250), scale=1.1)
+    b.arrow((165, 150), (240, 200), bend=-0.1)
+    b.text((110, 215), "the tank", size=30, color=CHALK)
+    b.label((110, 320), "Size 2.5: the whole\ntank scales", big.anchor("horn 2 (collidable)", "rim"), bend=0.15)
+    b.text((470, 62), "Boss: Warden\nHealth 6000\nBrain: Simple\nCharge and ram", size=28)
+    sq = (540, 400)
+    b.square(sq, 18)
+    b.text((540, 440), "a player", size=24, color=PINK)
+    b.arrow((sq[0] - 30, sq[1] - 20), big.anchor("main gun", "base"), color=PINK, bend=0.15, dash=True)
+    b.label((130, 405), "Spot range 2000:\nit fights what\ncomes close", (sq[0] - 40, sq[1] - 10), bend=0.2, size=28)
+    return b
+
+
 DIAGRAMS = [d00, d01, d02, d03, d04, d05, d06, d07, d08, d09, d10, d11, d12, d13, d14, d15,
-            d16_engine, d16_arc, d17_warhead, d17_fuse, d18]
+            d16_engine, d16_arc, d17_warhead, d17_fuse, d18, d19, d20, d21, d22]
 
 
 def build_all():
