@@ -11,6 +11,8 @@ A snake. The head is the tank; the body is a chain of hexagons that follows the 
 
 ## The trick
 
+!chalk(10-trail)
+
 A barrel pointing backward, **invisible**, with **Always fire** on and a quick **Reload**, firing a bullet with **Bullet speed 0** and **Launch speed 0**. A shot with no speed stays exactly where it was fired. As the tank moves, each new segment is dropped a little further along, and each one disappears after its **Lifetime**, so the chain has a fixed length.
 
 The taper: the segment's projectile has **Running out of time sets it off**, and a barrel riding it with **Fires when it bursts** drops a smaller end piece that lives a bit longer.

@@ -11,6 +11,8 @@ Brows, a scar across the whole face, a horn that comes to a needle point, and a 
 
 ## The trick
 
+!chalk(02-line-art)
+
 A barrel is placed by **Angle**, **Gap** (where it starts, measured from the body's centre) and **Length**, and shaped by **Width at base** and **Width at tip**, both as multiples of a standard barrel's 42 units. Three things the stock tanks never do:
 
 - **Width at base 0.1 to 0.15** gives a line. Put it **over** the body and you can draw mouths, brows, scars, seams, veins.

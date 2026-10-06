@@ -11,6 +11,8 @@ Two wings that beat while you hold fire, one up while the other is down. There i
 
 ## The trick
 
+!chalk(04-pistons)
+
 Draw the wing as a barrel, then make it fire something nobody will notice: a White speck with almost no damage, size or lifetime. Hold fire and the wing pumps at the barrel's reload rate. Put **Fire delay 0.5** on its partner and the pair alternates.
 
 Two conditions, learned the hard way:

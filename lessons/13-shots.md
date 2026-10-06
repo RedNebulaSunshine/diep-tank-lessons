@@ -11,6 +11,8 @@ A cannon that throws a spinning five-point star with an eye on it. In the Hallow
 
 ## The trick
 
+!chalk(13-shots)
+
 Open **Projectiles** and a projectile has the same panel a tank has: its own shape (**Its own**, with **Sides** and **Drawn as a star**), a **Spin** so it turns as it flies, and layers. Barrels, parts and auto turrets ride on it exactly as they ride on a body, and in that view the projectile's disc counts as a body of Size 50, however big the barrel fires it. Decorate it like a hull.
 
 ```scene

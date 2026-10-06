@@ -11,6 +11,8 @@ A yellow face with eyes, a smile and blue cheeks. Enemies see the same face with
 
 ## The trick
 
+!chalk(01-face)
+
 The body is the only thing the game colours for you. Leave it on **Team color**, then cover it with a part of exactly the same size placed **over** the body, and draw the face on top of that. Anything you set to **Same color as the body** then follows the team too: the cheeks here, a collar, a hat band, the lining of a cape.
 
 ```scene

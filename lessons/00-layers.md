@@ -7,6 +7,8 @@ tank: Layers
 
 ## What you see
 
+!chalk(00-layers)
+
 Every custom tank is a **body** plus a stack of layers. The **Layers** panel on the left lists them; the **Tank body** row in the middle of the list splits what draws **over** the body from what draws **under** it. Drag a layer across that row and it changes sides. Within each side, the layer higher in the list is painted on top.
 
 There are three kinds of layer, and that is all there is:

@@ -11,6 +11,8 @@ A tank that fades out when it stands still, leaving two yellow eyes hanging in t
 
 ## The trick
 
+!chalk(14-ghost)
+
 The **Invisibility** section on the tank: **Invisible** on, **Time to vanish** (seconds from fully visible to gone while idle), **Reveal distance** (enemies this close still see it faintly) and **Hits to reveal**. That is the stock Stalker. The ghostly part is **Visible while invisible** on the eye parts, which keeps them drawn while the body fades.
 
 ```scene

@@ -11,6 +11,8 @@ A tail that trails the turn and swishes back to centre. Capes, manes, broom twig
 
 ## The trick
 
+!chalk(06-tail)
+
 An auto turret only moves for a target inside its wedge. Give it **Facing 180** (straight back) and a narrow **Arc** of about 20, and almost nothing ever enters that wedge, so the turret sits at rest. When the tank turns, the turret lags the body for a moment and settles back: the closest thing this editor has to something that flows. Mount the tail on it and hide the turret's grey disc under a part the same colour as the body.
 
 ```scene

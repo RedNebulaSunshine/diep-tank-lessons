@@ -11,6 +11,8 @@ An arm holding a wand. At rest it hangs to the side; hold fire and it reaches to
 
 ## The trick
 
+!chalk(07-hand)
+
 Two settings on one auto turret. **Range 0** so it never looks for enemies, and **Aims with the cursor (Auto Smasher)** on so the player steers it. With both, the turret rests at its **Facing** until the fire button is held, then turns to the cursor inside its **Arc**, and returns to rest on release. What it carries makes no difference: a bare rod, a drawn hand, even a gun.
 
 ```scene

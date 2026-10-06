@@ -11,6 +11,8 @@ A missile that bends toward the nearest target and runs it down. Hornets, homing
 
 ## The trick
 
+!chalk(16-engine)
+
 A projectile can carry barrels (lesson 13), and a barrel with **Recoil** pushes whatever it sits on (lesson 11). So a bullet with a **backward** barrel that has **Always fire** and a lot of Recoil pushes itself along: that is how the stock Rocketeer works. Now put that engine on an **auto turret** that rides the bullet. The turret turns toward the nearest target inside its Range and Arc, the engine turns with it, and the push now points at the target.
 
 ```scene
@@ -36,6 +38,8 @@ A projectile can carry barrels (lesson 13), and a barrel with **Recoil** pushes 
 | Turret layer | under the body | The engine barrel draws over it, so no disc shows |
 
 ## The arc is measured from where you fired
+
+!chalk(16-arc)
 
 The turret's Arc is centred on the direction the missile was **fired**, not on the missile's nose as it turns. A missile with Arc 25 can only chase inside a 50° wedge from its launch line, so a target that steps out of the wedge is safe. **Only an Arc of 0 (the full circle) chases all the way round**, and a chaser needs a short Range or it locks on to whatever is behind you at launch.
 

@@ -11,6 +11,8 @@ Right-click and the tank lunges forward. Vampires, pouncing cats, charging bulls
 
 ## The trick
 
+!chalk(11-dash)
+
 Recoil pushes the tank away from the shot. So a barrel that points **backward** pushes the tank **forward**. Make it **invisible**, **Fires on right click**, with **Recoil** as high as the stock tanks go and a shot that does nothing and vanishes at once. A slow **Reload** turns it into an ability with a cooldown.
 
 ```scene

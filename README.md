@@ -37,6 +37,8 @@ pick apart in the real editor. Written for players who found the Halloween pack 
   [diep-pack skill](https://github.com/RedNebulaSunshine/diep-pack-skill)'s build library
   (clone it beside this repo, or set `DIEP_PACK_SKILL` to its folder). Every part is named,
   and those names are what the editor shows after an import.
+- `chalk.py` draws the chalkboard diagrams (`docs/img/chalk/`) from the demo tanks themselves, with
+  yellow labels and arrows naming the parts; a lesson places one beside its text with a line `!chalk(<id>)`.
 - `docs/` is the site GitHub Pages serves: `build.py` runs the demos, copies the packs and
   renders in, and turns the lessons into pages. `docs/assets/tank.js` draws a pack's JSON the
   way the editor does (a port of the skill's renderer) and sketches the moving tricks;

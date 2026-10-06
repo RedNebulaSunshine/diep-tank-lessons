@@ -20,6 +20,8 @@ Every moving trick in these lessons is a barrel that fires: pistons, bite points
 
 ## How a shot is counted
 
+!chalk(15-budget)
+
 - A barrel fires every ⌈15 × 0.914^cap × Reload⌉ ticks at 25 ticks a second, where *cap* is the tank's Reload stat cap. At cap 7 a Reload-1 barrel is about 3 shots a second, at cap 12 about 4, and short reloads cost more than proportionally (Reload 0.25 at cap 12 is 12.5 a second).
 - Each shot counts **1 plus everything its projectile carries**: parts, drawn rods, barrels, turrets. A web of 24 rods is 25 per shot. A drawn companion is as expensive as the hull's art.
 - A barrel riding a projectile adds its own shots once per live copy, if it fires: always on a drone; on a bullet only with Always fire or when it sits on one of the projectile's turrets. **Fires when it bursts** counts once per shot.

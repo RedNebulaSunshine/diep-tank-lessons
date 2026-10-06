@@ -11,6 +11,8 @@ Hold fire and a tight bundle of missiles leaves the tank, splits into a spreadin
 
 ## The trick
 
+!chalk(18-cluster)
+
 Nothing in this game splits in flight: a shot fired by a projectile is always a plain one (lesson 13). So the salvo is fired all at once, and the "split" is a **splitter** on each missile: a sideways barrel with the most **Recoil** and **Spread** the editor allows, firing a harmless speck a tenth of a second after launch. Each missile is kicked off the line in its own direction. Six missiles from one barrel would blow the per-second budget as bullets, so the missiles are **drones**: drones count against the drone limit and the room, not per second.
 
 ```scene

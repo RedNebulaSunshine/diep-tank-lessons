@@ -138,3 +138,9 @@ footer a { color: #fff; }
   .card h1 { font-size: 1.45rem; }
 }
 @media (prefers-reduced-motion: reduce) { .te-status { transition: none; } }
+
+/* ---- chalkboard diagrams (chalk.py): beside the text on wide screens, full width on phones ---- */
+.card figure.chalk { float: right; clear: right; width: 400px; max-width: 46%; margin: .3rem 0 1rem 1.4rem; }
+.card figure.chalk svg { display: block; width: 100%; height: auto; filter: drop-shadow(0 2px 2px #0003); }
+.card h2, .card .scene, .card table, .card .seen, .card pre { clear: both; }
+@media (max-width: 700px) { .card figure.chalk { float: none; width: 100%; max-width: 440px; margin: .6rem auto 1rem; } }

@@ -11,6 +11,8 @@ Four legs that react on their own: a square passes on one side and the legs ther
 
 ## The trick
 
+!chalk(09-limbs)
+
 Lesson 07's pivot with one change: a **Range** instead of 0. With **Aims with the cursor** on *and* a range, the turret tracks enemies inside the range while the player is idle, and follows the cursor while the player fires, both only inside its narrow **Arc**. Rest angle, narrow arc, a range: that is a living limb.
 
 ```scene

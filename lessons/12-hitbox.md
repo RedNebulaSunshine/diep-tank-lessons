@@ -11,6 +11,8 @@ A big armoured shell with a tiny blue dot at its heart. The dot is the body. The
 
 ## The trick
 
+!chalk(12-hitbox)
+
 Only the body and parts marked **Collidable (hitbox + body damage)** collide; everything else is picture. **Body size 8** shrinks the body (and its hitbox) to a dot, so the figure can be any shape you draw. Then tick **Collidable** on the one big part that should take the hits. It collides at roughly half to two thirds of its drawn size, and it deals body damage like a hull.
 
 ```scene

@@ -139,6 +139,12 @@ def md_to_html(body, scene_fn):
             out.append(f'<div class="{html.escape(cls)}">' + "".join(figs) + "</div>")
             i = j + 1
             continue
+        m = re.match(r"^!chalk\(([\w-]+)\)\s*$", line)
+        if m:
+            flush()
+            out.append(chalk_figure(m.group(1)))
+            i += 1
+            continue
         m = re.match(r"^(#{1,4})\s+(.*)", line)
         if m:
             flush()
@@ -199,6 +205,15 @@ def md_to_html(body, scene_fn):
     return "\n".join(out)
 
 
+def chalk_figure(ident):
+    """A chalkboard diagram (chalk.py), inlined so the page's handwriting font draws its words."""
+    path = os.path.join(DOCS, "img", "chalk", ident + ".svg")
+    if not os.path.exists(path):
+        sys.exit(f"no chalkboard {ident!r}: add it to chalk.py")
+    with open(path, encoding="utf-8") as fh:
+        return f'<figure class="chalk">{fh.read()}</figure>'
+
+
 # --- pages ------------------------------------------------------------------------------------
 
 def load_pack(slug):
@@ -244,6 +259,8 @@ def layout(title, description, body, image=None, path=""):
 <meta property="og:type" content="article">
 <meta property="og:url" content="{SITE_URL}{path}">
 {f'<meta property="og:image" content="{og_image}"><meta name="twitter:card" content="summary_large_image">' if og_image else '<meta name="twitter:card" content="summary">'}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
 </head>
@@ -319,5 +336,7 @@ if __name__ == "__main__":
     if "--no-demos" not in sys.argv:
         run_demos()
     copy_outputs()
+    import chalk
+    print("chalk:", len(chalk.build_all()), "boards")
     write_favicon()
     build_pages()

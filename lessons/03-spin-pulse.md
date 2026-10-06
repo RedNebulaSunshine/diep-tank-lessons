@@ -11,6 +11,8 @@ A gear that turns and a lantern that pulses. Neither fires anything, and neither
 
 ## The trick
 
+!chalk(03-spin-pulse)
+
 **Spin speed** on a part is rotation per tick, 25 ticks a second: 0.05 is about one turn every five seconds, 0.5 is the slider's end. The editor's preview does not animate, so you only see it in play.
 
 The pulse is a discovery a skill user sent in: put **two star parts on the same spot**, a bigger darker one under a smaller lighter one of the same hue, and give them **equal and opposite Spin speed**. When their spokes line up they look like one bright star; half a spoke later they interleave into a dimmer, rounder blob. The eye reads it as a light beating.

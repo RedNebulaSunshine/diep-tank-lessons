@@ -11,6 +11,8 @@ A mouth that hangs open, snaps shut while you hold fire, and bites what is insid
 
 ## The trick
 
+!chalk(08-jaws)
+
 Two of lesson 07's pivots, one each side of the aim, resting at **Facing ±45** so the mouth is open. Hold fire and each pivot turns toward the cursor from its own spot, so both bars swing inward and meet. Release and they fall open again.
 
 The bite is three **invisible** barrels along the inside of each jaw that fire a stationary, short-lived bullet with **Always fire** on: a damage point that hurts anything touching it. Whatever sits between the closed jaws takes six bites a second.

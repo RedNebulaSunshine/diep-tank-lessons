@@ -11,6 +11,8 @@ Two eyes that look at whatever comes near, pupils and all, with no gun on them.
 
 ## The trick
 
+!chalk(05-eyes)
+
 An **auto turret** always turns toward the nearest target inside its **Range** and **Arc**, whether or not it carries a weapon. So a turret with nothing on it but a part is a part that watches. Set the disc's **Base size** and **Base color** to make it the white of the eye, and put the pupil **on** the turret, a little ahead of its centre, so it points where the turret looks.
 
 ```scene

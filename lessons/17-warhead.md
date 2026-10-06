@@ -11,6 +11,8 @@ Two missiles. The first flies as a seeker (lesson 16) and bursts into ten bullet
 
 ## The warhead
 
+!chalk(17-warhead)
+
 A projectile's **Burst** section has three triggers: right click, getting destroyed, running out of time. Setting it off only ends the projectile; the explosion comes from barrels on it with **Fires when it bursts**, which fire once as it dies. One short barrel with a lot of **Spread** and many **Bullets per shot** is the cheap warhead; several short barrels round the bullet are the consistent one.
 
 ```scene
@@ -23,6 +25,8 @@ A projectile's **Burst** section has three triggers: right click, getting destro
 ```
 
 ## The proximity fuse
+
+!chalk(17-fuse)
 
 The game has no "explode when near" switch, but it has something as good: a gun on a projectile's turret fires by itself at whatever the turret sees. So give the missile a **second** turret with a short Range and a narrow Arc, make the warhead that turret's gun, and the missile fires its warhead the moment a target enters the small field. A long **Reload** on that gun is what stops it firing again and again.
 
