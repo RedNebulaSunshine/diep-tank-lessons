@@ -385,6 +385,16 @@
       script.remove();
       try { new Scene(box, cfg); } catch (e) { box.textContent = 'This browser could not draw the demo: ' + e.message; console.error(e); }
     });
+    // 'Where we used it': each of our tanks carries its one-tank pack beside its Copy button
+    document.querySelectorAll('[data-copy-tank]').forEach(btn => {
+      const script = btn.parentNode.querySelector('script[type="application/json"]');
+      if (!script) return;
+      btn.addEventListener('click', () => {
+        const pack = script.textContent;
+        const done = () => { btn.textContent = 'Copied. Paste it onto a pack with Ctrl+V'; setTimeout(() => btn.textContent = 'Copy tank JSON', 2500); };
+        if (navigator.clipboard) navigator.clipboard.writeText(pack).then(done, () => prompt('Copy this:', pack)); else prompt('Copy this:', pack);
+      });
+    });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
   window.DiepEditor = { Scene, fieldsFor, renderInspector, renderLayers };
