@@ -41,7 +41,7 @@
         F('Reveal distance', num(inv.revealDistance, 0), 'num', 'Enemies this close see it faintly. 0 never reveals.'),
         F('Hits to reveal', loh > 0 ? fmtN(0.3 / loh + 1) : 'Never', 'text')] });
       if (tank.helpText) S.push({ head: 'Tip', fields: [F('Tip', tank.helpText, 'text', 'Shown to a player for ten seconds when they switch to this tank.')] });
-      S.push({ head: isBoss ? 'Boss stats' : 'Stat points (max per stat)', hint: isBoss ? 'The levels the boss runs each stat at (0 to 12; the update of 9 October 2026). Its body's stat caps don't apply. Stock levels = 7 everywhere, Health Regen 0; Max all = 12 everywhere.' : null,
+      S.push({ head: isBoss ? 'Boss stats' : 'Stat points (max per stat)', hint: isBoss ? 'The levels the boss runs each stat at (0 to 12; the update of 9 October 2026). The stat caps of its body do not apply. Stock levels = 7 everywhere, Health Regen 0; Max all = 12 everywhere.' : null,
         fields: [F('Movement Speed · Reload · Bullet Damage · Bullet Penetration · Bullet Speed · Body Damage · Max Health · Health Regen', (isBoss ? ((boss && boss.statLevels) || [7, 7, 7, 7, 7, 7, 7, 0]) : (tank.statsMaxLevel || [7, 7, 7, 7, 7, 7, 7, 7])).join(' · '), 'text')] });
       if (boss) S.push.apply(S, bossSections(boss));
     } else if (part.kind === 'barrel') {
