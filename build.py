@@ -19,7 +19,8 @@ import sys
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DEMOS, LESSONS, DOCS, BUILD = (os.path.join(ROOT, d) for d in ("demos", "lessons", "docs", "build"))
-LAB_RENDERS = os.path.join(ROOT, "..", "output", "renders")        # the private lab's renders, when present
+LAB_OUTPUT = os.path.join(ROOT, "..", "output")                    # the private lab's packs, when present
+HALLOWEEN = "halloween-0.16.0"   # the Halloween release players have: 'where we used it' pictures and downloads match it
 SITE_TITLE = "Tank lessons"
 SITE_URL = os.environ.get("SITE_URL", "https://rednebulasunshine.github.io/diep-tank-lessons/")
 SKILL_URL = "https://github.com/RedNebulaSunshine/diep-pack-skill"
@@ -51,19 +52,63 @@ def copy_outputs():
 
 
 def fetch_seen_images(names):
-    """Copy 'where we used it' renders from the lab when it is beside this repo; keep what is committed."""
+    """Render the 'where we used it' pictures from the HALLOWEEN release when the lab and the skill are
+    beside this repo, so they match the downloads; keep what is committed."""
+    pack = os.path.join(LAB_OUTPUT, HALLOWEEN + ".diep-pack")
+    skill = os.environ.get("DIEP_PACK_SKILL") or os.path.join(ROOT, "..", ".claude", "skills", "diep-pack")
+    renderer = os.path.join(skill, "scripts", "render_pack.py")
+    out = os.path.join(BUILD, "renders-" + HALLOWEEN)
+    if os.path.exists(pack) and os.path.exists(renderer):
+        r = subprocess.run([sys.executable, renderer, pack, "--out", out, "--projectiles"], capture_output=True, text=True, encoding="utf-8", errors="replace")
+        if r.returncode:
+            sys.exit(f"rendering {HALLOWEEN} failed:\n{r.stdout}\n{r.stderr}")
     missing = []
     for n in names:
-        dst = os.path.join(DOCS, "img", n)
-        if os.path.exists(dst):
-            continue
-        src = os.path.join(LAB_RENDERS, n)
+        dst, src = os.path.join(DOCS, "img", n), os.path.join(out, n)
         if os.path.exists(src):
             shutil.copy2(src, dst)
-        else:
+        elif not os.path.exists(dst):
             missing.append(n)
     if missing:
-        print("missing images (not in docs/img and no lab renders):", ", ".join(missing))
+        print("missing images (not in docs/img and no %s render):" % HALLOWEEN, ", ".join(missing))
+
+
+def slugify(name):
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+
+
+def halloween_packs(slugs):
+    """One pack per Halloween tank a lesson shows, cut from the HALLOWEEN release when the lab is beside
+    this repo; keep what is committed. Each tank comes off the Basic tank at level 1, as the demos do."""
+    src_path = os.path.join(LAB_OUTPUT, HALLOWEEN + ".diep-pack")
+    if not os.path.exists(src_path):
+        missing = [s for s in slugs if not os.path.exists(os.path.join(DOCS, "packs", "halloween-%s.diep-pack" % s))]
+        if missing:
+            sys.exit("no %s.diep-pack in the lab and no committed pack for: %s" % (HALLOWEEN, ", ".join(missing)))
+        return
+    shutil.copy2(src_path, os.path.join(DOCS, "packs", HALLOWEEN + ".diep-pack"))
+    with open(src_path, encoding="utf-8") as fh:
+        src = json.load(fh)
+    tanks = {slugify(t["name"]): t for t in src["tanks"]}
+    for s in slugs:
+        if s not in tanks:
+            sys.exit("no tank for img/halloween-%s*.png in %s" % (s, HALLOWEEN))
+        tank = dict(tanks[s], id=100001, minLevel=1, upgradesFrom=[0])
+        pack = {"version": src["version"], "name": "%s (%s)" % (tank["name"], src["name"]), "author": src["author"], "tanks": [tank]}
+        with open(os.path.join(DOCS, "packs", "halloween-%s.diep-pack" % s), "w", encoding="utf-8") as fh:
+            fh.write(json.dumps(pack, separators=(",", ":")))
+
+
+def seen_tank(src):
+    """The download and copy buttons under a 'where we used it' picture of one of our tanks."""
+    m = re.match(r"img/halloween-([\w-]+?)(?:-proj-[\w-]+)?\.png$", src)
+    if not m:
+        return ""
+    file = "halloween-%s.diep-pack" % m.group(1)
+    pack = load_pack(file[:-len(".diep-pack")])
+    payload = json.dumps(pack, ensure_ascii=False).replace("</", "<\\/")
+    return (f'<div class="get-tank"><a class="te-btn" href="packs/{file}" download="{file}">Download {html.escape(pack["tanks"][0]["name"])}</a>'
+            f'<button class="te-btn" type="button" data-copy-tank>Copy tank JSON</button><script type="application/json">{payload}</script></div>')
 
 
 # --- markdown ---------------------------------------------------------------------------------
@@ -133,7 +178,7 @@ def md_to_html(body, scene_fn):
             for b in block:
                 m = re.match(r"!\[([^\]]*)\]\(([^)\s]+)\)", b.strip())
                 if m:
-                    figs.append(f'<figure><img src="{m.group(2)}" alt="{html.escape(m.group(1))}" loading="lazy"><figcaption>{inline(m.group(1))}</figcaption></figure>')
+                    figs.append(f'<figure><img src="{m.group(2)}" alt="{html.escape(m.group(1))}" loading="lazy"><figcaption>{inline(m.group(1))}</figcaption>{seen_tank(m.group(2))}</figure>')
                 elif b.strip():
                     figs.append("<p>" + inline(b) + "</p>")
             out.append(f'<div class="{html.escape(cls)}">' + "".join(figs) + "</div>")
@@ -291,6 +336,7 @@ def build_pages():
     for meta, body in lessons:
         seen.update(re.findall(r"img/(halloween-[\w-]+\.png)", body))
     fetch_seen_images(sorted(seen))
+    halloween_packs(sorted({re.match(r"halloween-([\w-]+?)(?:-proj-[\w-]+)?\.png$", n).group(1) for n in seen}))
     for k, (meta, body) in enumerate(lessons):
         prev = lessons[k - 1][0] if k > 0 else None
         nxt = lessons[k + 1][0] if k + 1 < len(lessons) else None

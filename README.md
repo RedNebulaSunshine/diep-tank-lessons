@@ -47,6 +47,11 @@ pick apart in the real editor. Written for players who found the Halloween pack 
   renders in, and turns the lessons into pages. `docs/assets/tank.js` draws a pack's JSON the
   way the editor does (a port of the skill's renderer) and sketches the moving tricks;
   `docs/assets/editor.js` is the mock of the editor's panels and the step-through.
+- A lesson's **Where we used it** pictures (`img/halloween-<tank>.png`) are our own Halloween tanks.
+  When the lab is beside this repo, `build.py` renders them from the release named by `HALLOWEEN`
+  and cuts each tank into its own pack (`docs/packs/halloween-<tank>.diep-pack`, level 1 under the
+  stock Tank), so every picture has a Download and a Copy tank JSON button. Without the lab it keeps
+  what is committed.
 
 ```
 python build.py              # demos + pages
