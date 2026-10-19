@@ -58,9 +58,9 @@ The pages need no server: open `docs/index.html` from disk and everything works.
 ## Corrections
 
 If a field name, a number or a claim about the game is wrong, open an issue. The lessons
-describe the editor as of its update of 6 October 2026 (custom bosses, custom colours, parts
-riding parts, fixed rotation, eight hitboxes); the editor is a work in progress and its labels
-can change. The game's menu now has a rules page (what gets a ban, which scripts are allowed);
+describe the editor as of its updates of 6 October 2026 (custom bosses, custom colours, parts
+riding parts, fixed rotation, eight hitboxes) and 9 October 2026 (a boss's own stat levels,
+nine turrets); the editor is a work in progress and its labels can change. The game's menu now has a rules page (what gets a ban, which scripts are allowed);
 read it before hosting packs for other people.
 
 ## Licence and credits

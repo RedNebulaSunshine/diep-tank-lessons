@@ -19,6 +19,6 @@ Start with lesson 00 if you have never looked at the Layers panel; otherwise jum
 
 Or press **Copy tank JSON** on a lesson, open a pack of yours in the editor and press **Ctrl+V**. All 24 demo tanks are also in one pack, the lesson 22 boss included: [tank-lessons.diep-pack](packs/tank-lessons.diep-pack).
 
-Lessons 19 to 22 cover what the editor update of 6 October 2026 added: parts that ride parts, parts that keep their heading, your own colours, and bosses. The editor now labels custom tanks **#C1, #C2 …** in pack order; the mock here does the same.
+Lessons 19 to 22 cover what the editor update of 6 October 2026 added: parts that ride parts, parts that keep their heading, your own colours, and bosses (lesson 22 includes the boss stat levels of the 9 October 2026 update). The editor now labels custom tanks **#C1, #C2 …** in pack order; the mock here does the same.
 
 > The demos here are a sketch of the game, not the game: speeds and timings are approximate, and the editor's own preview does not animate at all. What the field names and numbers do is exact.

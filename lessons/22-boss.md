@@ -15,14 +15,14 @@ A grey three-horned tank with a drone spawner at the back and a big gun in front
 
 The editor update of 6 October 2026 added a **Bosses** tab. A boss is two things:
 
-1. **A tank** like any other, usually a **boss copy**: select a tank and press **Make a boss copy**. The copy is marked boss-only, so the editor drops it from the class tree and the starters, and its **Stat levels** panel is fixed at 7 for every stat (health regen 0) and read-only. You can still edit its parts and barrels, and that is where its guns, drones and hitboxes come from.
+1. **A tank** like any other, usually a **boss copy**: select a tank and press **Make a boss copy**. The copy is marked boss-only, so the editor drops it from the class tree and the starters. Its stats panel becomes **Boss stats**: eight sliders, 0 to 12, for the level the boss plays each stat at (the update of 9 October 2026; before it every boss played at 7). **Stock levels** puts them back to 7 everywhere and 0 Health Regen, the stock bosses' way; **Max all** sets twelve everywhere. The tank's own stat caps do not apply to a boss. You can still edit its parts and barrels, and that is where its guns, drones and hitboxes come from.
 2. **A boss record** in the Bosses tab (**New boss**, or **New boss from copy**) that picks the tank and sets everything else: **Name**, **Spawn message**, **Size**, **Health**, the score it is worth, its **Brain**, what it does when it spots a player, where and how often it spawns.
 
 The demo tank is the boss copy; the record is shown under the body in the mock inspector.
 
 ```scene
 {"steps": [
- {"show": [], "focus": "Tank body", "say": "The tank: **Body size 60** in **Fallen**, the stock bosses' grey. Its **Stat levels** are fixed at 7: a boss plays maxed."},
+ {"show": [], "focus": "Tank body", "say": "The tank: **Body size 60** in **Fallen**, the stock bosses' grey. Its **Boss stats** are the stock levels: 7 everywhere, Health Regen 0. Raise Body Damage and Max Health for a rammer, Reload and Bullet Damage for a gunner."},
  {"show": ["horn 1 (collidable)", "horn 2 (collidable)", "horn 3 (collidable)"], "focus": "horn 1 (collidable)", "say": "Three triangles of **Size 26** with **Collidable** on: the boss rams with them. Up to eight parts can be collidable since the update (lesson 12)."},
  {"show": ["horn 1 (collidable)", "horn 2 (collidable)", "horn 3 (collidable)", "spawner", "main gun", "side gun left", "side gun right"], "focus": "main gun", "say": "Its weapons: a wide **Length 120** cannon, two side guns at **Angle ±120**, and a rear **spawner** with 4 drones. The simple brain fires every gun it has; the drones hunt on their own."},
  {"show": "all", "focus": "Tank body", "say": "Now scroll the inspector to the **Boss** sections: the record from the Bosses tab. **Size 2.5**, **Health 6000**, **Brain: Simple**, **When it spots a player: Charge and ram** within **Spot range 2000**, **Wander around** otherwise, spawning in the inner **0 to 0.4** of the map."},
@@ -55,7 +55,7 @@ The demo tank is the boss copy; the record is shown under the body in the mock i
 ## Gotchas
 
 - **One tank per boss record.** The export renames every record after its tank, so two records on one tank come back with one name and `spawn_boss` cannot tell them apart. A variant boss gets its own boss copy.
-- **Tune the guns in the tank, not the record.** The record sets Size, Health and body damage on touch; damage, reload and drone counts are the tank's, played at stat level 7, so a boss copy of a maxed-out tank is brutal. Our test bosses had to have their guns turned down before anyone could study them.
+- **Tune the guns in the tank, the levels in the record.** The record sets Size, Health, body damage on touch and, since 9 October 2026, the **Boss stats** (the level each stat plays at, 0 to 12; the stock bosses play 7 with no regen). Damage multipliers, reload and drone counts are the tank's. A boss copy of a maxed-out tank at stock levels is already brutal: our test bosses had to have their guns turned down before anyone could study them. The effect of the levels in play has not been measured yet.
 - Big parts, strong contrast and few colours survive the scale. Fine line art does not.
-- A boss uses the same budget as any tank (lesson 15), rated at Reload level 7.
+- A boss uses the same budget as any tank (lesson 15), rated at the higher of its tank's Reload cap and its Boss stats Reload level: a boss at Reload 12 is rated 1.5 times the rate of one at 7.
 - There is one number the Bosses tab does not show: a damage floor the game writes on its own bosses (4, and 6 on Fallen Booster). A pack file can carry it (`minDamageMultiplier`), and 6 bit clearly harder in play. The form keeps it when you edit the pack.
